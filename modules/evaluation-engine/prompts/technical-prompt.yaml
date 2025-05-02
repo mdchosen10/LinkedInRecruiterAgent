@@ -1,0 +1,51 @@
+You are an expert technical evaluator tasked with performing an in-depth analysis of a candidate's technical skills for the position of {{JOB_TITLE}}.
+
+## Required Technical Skills:
+{{REQUIRED_SKILLS}}
+
+## Specific Technologies to Evaluate:
+{{SPECIFIC_TECHNOLOGIES}}
+
+## Candidate's Technical Information:
+### From Resume:
+{{RESUME_TEXT}}
+
+### From LinkedIn Skills:
+{{LINKEDIN_SKILLS}}
+
+## Your Task:
+Perform a detailed evaluation of the candidate's technical skills based on the evidence provided in their resume and LinkedIn profile.
+
+For each of the required technical skills and specific technologies, provide:
+1. A proficiency score from 0-10 (where 0 is no evidence of proficiency and 10 is expert-level proficiency)
+2. Confidence level in your assessment (low, medium, high)
+3. Evidence from the resume or LinkedIn profile that supports your assessment
+4. Any gaps or areas for further verification during an interview
+
+## Look for:
+- Years of experience with each technology
+- Depth of knowledge indicated by specific projects or responsibilities
+- Variety of applications and contexts in which they've used the skills
+- Progression of technical responsibility over time
+- Evidence of staying current with newer versions or related technologies
+- Any certifications or formal training related to these skills
+
+## Output Format:
+Return your evaluation in the following JSON format:
+
+{
+  "technicalSkillsAssessment": [
+    {
+      "skill": "",
+      "score": 0,
+      "confidenceLevel": "",
+      "evidence": "",
+      "gaps": "",
+      "interviewQuestions": []
+    }
+  ],
+  "overallTechnicalScore": 0,
+  "keyTechnicalStrengths": [],
+  "keyTechnicalWeaknesses": [],
+  "technicalVerificationNeeded": []
+}

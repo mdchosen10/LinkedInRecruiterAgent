@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Automation</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      color: #0077b5;
+      margin-bottom: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      margin-bottom: 1rem;
+    }
+    
+    button {
+      background-color: #0077b5;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: #005582;
+    }
+    
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group.checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .form-group.checkbox input {
+      width: auto;
+      margin: 0;
+    }
+    
+    /* Layout components */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    /* LinkedIn Automation styles */
+    .linkedin-automation-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .error-message {
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .error-message button {
+      background-color: transparent;
+      color: #c62828;
+      padding: 4px 8px;
+      font-size: 0.8rem;
+    }
+    
+    .login-section {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .job-search {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .job-search .form-group {
+      flex-grow: 1;
+      margin-bottom: 0;
+    }
+    
+    .applicants-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .applicants-container {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 20px;
+      height: calc(100vh - 250px);
+      min-height: 500px;
+    }
+    
+    .applicants-list {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      max-height: 100%;
+    }
+    
+    .applicant-item {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .applicant-item:hover {
+      background-color: #f5f9ff;
+    }
+    
+    .applicant-item.selected {
+      background-color: #e8f1fb;
+      border-left: 4px solid #0077b5;
+    }
+    
+    .applicant-item h4 {
+      margin-bottom: 5px;
+      color: #0077b5;
+    }
+    
+    .applicant-item .headline {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    
+    .applicant-item .location {
+      font-size: 0.8rem;
+      color: #999;
+    }
+    
+    .applicant-details {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      overflow-y: auto;
+      max-height: 100%;
+    }
+    
+    .no-selection {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+    }
+    
+    .profile-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .profile-actions .buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .profile-data {
+      margin-top: 20px;
+    }
+    
+    .profile-header {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .profile-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    .profile-info {
+      flex-grow: 1;
+    }
+    
+    .profile-section {
+      margin-bottom: 25px;
+    }
+    
+    .profile-section h4 {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      color: #0077b5;
+    }
+    
+    .experience-list, .education-list {
+      list-style: none;
+    }
+    
+    .experience-item, .education-item {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    
+    .experience-item:last-child, .education-item:last-child {
+      border-bottom: none;
+    }
+    
+    .experience-item h5, .education-item h5 {
+      color: #333;
+      margin-bottom: 5px;
+    }
+    
+    .company, .degree {
+      font-weight: 500;
+      color: #555;
+    }
+    
+    .date-range, .dates {
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 5px;
+    }
+    
+    .description {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .skill-item {
+      background-color: #f0f7ff;
+      color: #0077b5;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+    
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #0077b5;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="app">
+      <!-- App content will be rendered here -->
+      <div class="linkedin-automation-panel">
+        <h1>LinkedIn Automation</h1>
+        
+        <div class="card login-section">
+          <h2>Login to LinkedIn</h2>
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" id="password" required>
+            </div>
+            <div class="form-group checkbox">
+              <input type="checkbox" id="remember">
+              <label for="remember">Remember credentials</label>
+            </div>
+            <button type="submit" id="loginButton">Login</button>
+          </form>
+        </div>
+        
+        <!-- Main content will be rendered here after login -->
+        <div id="mainContent" style="display: none;">
+          <!-- Will be populated dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Basic demo implementation (in a real app, this would be in separate files)
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Initialize automation
+      try {
+        const result = await window.linkedinAutomation.initialize();
+        if (!result.success) {
+          showError(result.error || 'Failed to initialize LinkedIn automation');
+        }
+      } catch (error) {
+        showError('Error initializing: ' + error.message);
+      }
+      
+      // Handle login form submission
+      const loginForm = document.getElementById('loginForm');
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const remember = document.getElementById('remember').checked;
+        
+        const loginButton = document.getElementById('loginButton');
+        loginButton.disabled = true;
+        loginButton.textContent = 'Logging in...';
+        
+        try {
+          const result = await window.linkedinAutomation.login(email, password, remember);
+          if (result.success) {
+            document.querySelector('.login-section').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+            initializeMainInterface();
+          } else {
+            showError(result.error || 'Login failed');
+          }
+        } catch (error) {
+          showError('Error logging in: ' + error.message);
+        } finally {
+          loginButton.disabled = false;
+          loginButton.textContent = 'Login';
+        }
+      });
+      
+      // Function to show errors
+      function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.innerHTML = `
+          <p>${message}</p>
+          <button class="dismiss-error">Dismiss</button>
+        `;
+        
+        const container = document.querySelector('.linkedin-automation-panel');
+        container.insertBefore(errorDiv, container.firstChild);
+        
+        const dismissButton = errorDiv.querySelector('.dismiss-error');
+        dismissButton.addEventListener('click', () => {
+          errorDiv.remove();
+        });
+      }
+      
+      // Function to initialize the main interface after login
+      function initializeMainInterface() {
+        const mainContent = document.getElementById('mainContent');
+        
+        mainContent.innerHTML = `
+          <div class="header">
+            <h2>LinkedIn Job Applicants</h2>
+            <button id="logoutButton">Logout</button>
+          </div>
+          
+          <div class="job-search">
+            <div class="form-group">
+              <label for="jobId">Job ID:</label>
+              <input type="text" id="jobId" placeholder="Enter LinkedIn job ID">
+            </div>
+            <button id="searchButton">Get Applicants</button>
+          </div>
+          
+          <div id="applicantsSection" style="display: none;">
+            <!-- Will be populated when applicants are fetched -->
+          </div>
+        `;
+        
+        // Handle logout
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+          try {
+            await window.linkedinAutomation.logout();
+            document.querySelector('.login-section').style.display = 'block';
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+          } catch (error) {
+            showError('Error logging out: ' + error.message);
+          }
+        });
+        
+        // Handle job search
+        document.getElementById('searchButton').addEventListener('click', async () => {
+          const jobId = document.getElementById('jobId').value;
+          
+          if (!jobId) {
+            showError('Please enter a job ID');
+            return;
+          }
+          
+          const searchButton = document.getElementById('searchButton');
+          searchButton.disabled = true;
+          searchButton.textContent = 'Searching...';
+          
+          try {
+            const result = await window.linkedinAutomation.getApplicants(jobId);
+            if (result.success) {
+              renderApplicants(result.applicants);
+            } else {
+              showError(result.error || 'Failed to retrieve applicants');
+            }
+          } catch (error) {
+            showError('Error getting applicants: ' + error.message);
+          } finally {
+            searchButton.disabled = false;
+            searchButton.textContent = 'Get Applicants';
+          }
+        });
+      }
+      
+      // Function to render applicants
+      function renderApplicants(applicants) {
+        const applicantsSection = document.getElementById('applicantsSection');
+        applicantsSection.style.display = 'block';
+        
+        applicantsSection.innerHTML = `
+          <div class="applicants-header">
+            <h3>Applicants (${applicants.length})</h3>
+            <button id="exportButton">Export All</button>
+          </div>
+          
+          <div class="applicants-container">
+            <div class="applicants-list" id="applicantsList">
+              ${applicants.map((applicant, index) => `
+                <div class="applicant-item" data-index="${index}">
+                  <h4>${applicant.name || 'Unnamed Applicant'}</h4>
+                  <p class="headline">${applicant.headline || 'No headline'}</p>
+                  <p class="location">${applicant.location || 'No location'}</p>
+                </div>
+              `).join('')}
+            </div>
+            
+            <div class="applicant-details">
+              <div class="no-selection">
+                <p>Select an applicant to view details</p>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        // Store applicants data
+        window.applicantsData = applicants;
+        
+        // Handle applicant selection
+        const applicantItems = document.querySelectorAll('.applicant-item');
+        applicantItems.forEach(item => {
+          item.addEventListener('click', () => {
+            // Remove selected class from all items
+            applicantItems.forEach(i => i.classList.remove('selected'));
+            
+            // Add selected class to clicked item
+            item.classList.add('selected');
+            
+            // Get applicant data
+            const index = parseInt(item.dataset.index);
+            const applicant = window.applicantsData[index];
+            
+            // Render applicant details
+            renderApplicantDetails(applicant);
+          });
+        });
+        
+        // Handle export button
+        document.getElementById('exportButton').addEventListener('click', async () => {
+          try {
+            const result = await window.linkedinAutomation.exportProfiles(applicants);
+            if (result.success) {
+              alert(`Profiles exported successfully to: ${result.filePath}`);
+            } else {
+              showError(result.message || 'Failed to export profiles');
+            }
+          } catch (error) {
+            showError('Error exporting profiles: ' + error.message);
+          }
+        });
+      }
+      
+      // Function to render applicant details
+      function renderApplicantDetails(applicant) {
+        const detailsContainer = document.querySelector('.applicant-details');
+        
+        detailsContainer.innerHTML = `
+          <div class="profile-actions">
+            <h3>${applicant.name || 'Unnamed Applicant'}</h3>
+            <div class="buttons">
+              <button id="viewProfileButton">View Profile</button>
+              <button id="downloadCVButton">Download CV</button>
+            </div>
+            
+            <div id="profileData">
+              <!-- Will be populated when profile data is fetched -->
+            </div>
+          </div>
+        `;
+        
+        // Handle view profile button
+        document.getElementById('viewProfileButton').addEventListener('click', async () => {
+          const button = document.getElementById('viewProfileButton');
+          button.disabled = true;
+          button.textContent = 'Loading...';
+          
+          try {
+            const result = await window.linkedinAutomation.getProfileData(applicant.profileUrl);
+            if (result.success) {
+              renderProfileData(result.profileData);
+            } else {
+              showError(result.error || 'Failed to retrieve profile data');
+            }
+          } catch (error) {
+            showError('Error getting profile data: ' + error.message);
+          } finally {
+            button.disabled = false;
+            button.textContent = 'View Profile';
+          }
+        });
+        
+        // Handle download CV button
+        document.getElementById('downloadCVButton').addEventListener('click', async () => {
+          const button = document.getElementById('downloadCVButton');
+          button.disabled = true;
+          button.textContent = 'Downloading...';
+          
+          try {
+            const result = await window.linkedinAutomation.downloadCV(applicant.profileUrl);
+            if (result.success) {
+              alert(`CV downloaded successfully to: ${result.filePath}`);
+            } else {
+              alert(result.message || 'No CV found for this applicant');
+            }
+          } catch (error) {
+            showError('Error downloading CV: ' + error.message);
+          } finally {
+            button.disabled = false;
+            button.textContent = 'Download CV';
+          }
+        });
+      }
+      
+      // Function to render profile data
+      function renderProfileData(profileData) {
+        const profileDataContainer = document.getElementById('profileData');
+        
+        profileDataContainer.innerHTML = `
+          <div class="profile-data">
+            <div class="profile-header">
+              ${profileData.profileImage ? 
+                `<img src="${profileData.profileImage}" alt="${profileData.name}" class="profile-image">` : ''}
+              <div class="profile-info">
+                <h3>${profileData.name || 'Unnamed'}</h3>
+                <p class="headline">${profileData.headline || 'No headline'}</p>
+                <p class="location">${profileData.location || 'No location'}</p>
+              </div>
+            </div>
+            
+            ${profileData.about ? `
+              <div class="profile-section">
+                <h4>About</h4>
+                <p>${profileData.about}</p>
+              </div>
+            ` : ''}
+            
+            ${profileData.experience && profileData.experience.length > 0 ? `
+              <div class="profile-section">
+                <h4>Experience</h4>
+                <ul class="experience-list">
+                  ${profileData.experience.map(exp => `
+                    <li class="experience-item">
+                      <h5>${exp.title || 'Untitled Position'}</h5>
+                      <p class="company">${exp.company || 'Unknown Company'}</p>
+                      <p class="date-range">${exp.dateRange || 'No date information'}</p>
+                      ${exp.description ? `<p class="description">${exp.description}</p>` : ''}
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            ` : ''}
+            
+            ${profileData.education && profileData.education.length > 0 ? `
+              <div class="profile-section">
+                <h4>Education</h4>
+                <ul class="education-list">
+                  ${profileData.education.map(edu => `
+                    <li class="education-item">
+                      <h5>${edu.school || 'Unknown Institution'}</h5>
+                      <p class="degree">${edu.degree || 'No degree information'}</p>
+                      ${edu.fieldOfStudy ? `<p class="field">${edu.fieldOfStudy}</p>` : ''}
+                      <p class="dates">${edu.dates || 'No date information'}</p>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            ` : ''}
+            
+            ${profileData.skills && profileData.skills.length > 0 ? `
+              <div class="profile-section">
+                <h4>Skills</h4>
+                <div class="skills-list">
+                  ${profileData.skills.map(skill => `
+                    <span class="skill-item">${skill.name}</span>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{{!--{"category":"interview","description":"Technical interview invitation with details about the format","variables":["candidateName","position","companyName","interviewDate","interviewTime","interviewerName","technicalFocus"]}--}}
+Hi {{candidateName}},
+
+I hope this message finds you well! We've been impressed with your background in {{#if candidateSkills}}{{random candidateSkills}}{{else}}your field{{/if}} and would like to invite you to a technical interview for the {{position}} position at {{companyName}}.
+
+{{#if interviewDate}}
+The interview is scheduled for {{formatDate interviewDate "MMMM D, YYYY"}} at {{interviewTime}}. 
+{{else}}
+We'd like to schedule this technical interview at a time that works best for you.
+{{/if}}
+
+{{#if technicalFocus}}
+This interview will focus primarily on {{technicalFocus}}. You might want to refresh your knowledge in this area before the interview.
+{{else}}
+This will be a technical interview where we'll discuss your expertise and approach to solving problems relevant to the role.
+{{/if}}
+
+{{#if interviewerName}}
+You'll be speaking with {{interviewerName}}, our {{interviewerRole}}.
+{{/if}}
+
+{{#ifCond sentiment.enthusiasm "==" "high"}}
+We're particularly excited about your experience with {{#if candidateSkills}}{{candidateSkills.[0]}}{{else}}relevant technologies{{/if}} and looking forward to discussing how you could contribute to our team!
+{{/ifCond}}
+
+Could you please confirm if this time works for you? If not, please suggest a few alternatives.
+
+Best regards,
+{{recruiterName}}
+{{companyName}} Recruiting Team

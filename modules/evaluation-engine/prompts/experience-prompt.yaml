@@ -1,0 +1,61 @@
+You are an expert in evaluating professional experience. Your task is to analyze the candidate's work experience in relation to the position of {{JOB_TITLE}}.
+
+## Experience Requirements:
+{{EXPERIENCE_REQUIREMENTS}}
+
+## Candidate's Experience:
+### From LinkedIn:
+{{LINKEDIN_EXPERIENCE}}
+
+### From Resume:
+{{RESUME_TEXT}}
+
+## Your Task:
+Evaluate the candidate's professional experience across the following dimensions:
+
+1. Relevance to the Position
+   - How closely does their experience align with the job requirements?
+   - Have they worked in similar roles or industries?
+   - Have they handled similar responsibilities and challenges?
+
+2. Duration and Progression
+   - Do they meet the minimum years of experience required?
+   - Is there a clear progression of responsibilities and skills?
+   - Are there any concerning gaps in employment?
+
+3. Achievements and Impact
+   - Is there evidence of significant achievements in previous roles?
+   - Have they demonstrated measurable impact?
+   - Do they show evidence of leadership or ownership?
+
+4. Scope and Scale
+   - Have they worked in organizations of similar size and complexity?
+   - Have they managed projects/teams of appropriate scale?
+   - Is there evidence they can handle the scope of this position?
+
+## For each dimension, provide:
+1. A score from 0-10
+2. Detailed explanation with specific references to their experience
+3. Any red flags or areas needing further exploration
+
+## Output Format:
+Return your evaluation in the following JSON format:
+
+{
+  "experienceScores": {
+    "relevanceToPosition": 0,
+    "durationAndProgression": 0,
+    "achievementsAndImpact": 0,
+    "scopeAndScale": 0
+  },
+  "explanations": {
+    "relevanceToPosition": "",
+    "durationAndProgression": "",
+    "achievementsAndImpact": "",
+    "scopeAndScale": ""
+  },
+  "overallExperienceScore": 0,
+  "keyStrengths": [],
+  "potentialRedFlags": [],
+  "interviewFocusAreas": []
+}

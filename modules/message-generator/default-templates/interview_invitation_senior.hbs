@@ -1,0 +1,24 @@
+{{!--{"category":"interview","description":"Senior-level candidate interview invitation","variables":["candidateName","position","companyName","interviewDate","interviewTime","interviewerName"]}--}}
+Hello {{titleCase candidateName}},
+
+I'm reaching out regarding your application for the {{position}} role at {{companyName}}. Your extensive experience, particularly in {{#if candidateSkills}}{{candidateSkills.[0]}} and {{candidateSkills.[1]}}{{else}}your field{{/if}}, has caught our attention.
+
+{{#if interviewDate}}
+We would like to arrange an interview with you on {{formatDate interviewDate "MMMM D, YYYY"}} at {{interviewTime}}. 
+{{else}}
+We would like to arrange an interview with you at your earliest convenience.
+{{/if}}
+
+{{#if interviewerName}}
+You'll be meeting with {{interviewerName}}, our {{interviewerRole}}. The discussion will focus on your leadership experience and strategic vision, alongside technical aspects of the role.
+{{else}}
+The interview will involve several members of our leadership team. The discussion will focus on your leadership experience and strategic vision, alongside technical aspects of the role.
+{{/if}}
+
+This conversation will give us a chance to share more about our company's direction and how your expertise could help shape our future.
+
+Please let me know if the proposed time is convenient for you, or if you'd prefer an alternative arrangement.
+
+Regards,
+{{recruiterName}}
+{{companyName}} Recruiting Team

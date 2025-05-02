@@ -1,0 +1,22 @@
+{{!--{"category":"interview","description":"Standard interview invitation","variables":["candidateName","position","companyName","interviewDate","interviewTime","interviewerName"]}--}}
+Hi {{candidateName}},
+
+Thank you for your interest in the {{position}} role at {{companyName}}. We've reviewed your application and would like to invite you for an interview.
+
+{{#if interviewDate}}
+We'd like to schedule the interview for {{formatDate interviewDate "MMMM D, YYYY"}} at {{interviewTime}}. 
+{{else}}
+We'd like to schedule an interview at your earliest convenience.
+{{/if}}
+
+{{#if interviewerName}}
+You'll be speaking with {{interviewerName}}, who is looking forward to learning more about your experience and background.
+{{/if}}
+
+Please let me know if this time works for you, or if you need to suggest an alternative.
+
+Looking forward to your response!
+
+Best regards,
+{{recruiterName}}
+{{companyName}} Recruiting Team

@@ -1,0 +1,18 @@
+{{!--{"category":"reject","description":"Rejection after interview with feedback","variables":["candidateName","position","companyName","feedback"]}--}}
+Hello {{candidateName}},
+
+Thank you for taking the time to interview for the {{position}} position at {{companyName}}. We appreciate your interest in joining our team and the effort you put into the interview process.
+
+After careful consideration, we've decided to move forward with another candidate whose experience more closely aligns with our current team needs. This was a difficult decision, as we were impressed with many aspects of your background.
+
+{{#if feedback}}
+I wanted to share some feedback from your interview: {{feedback}}
+{{/if}}
+
+We would be happy to keep your resume on file and consider you for future opportunities that might be a better match. Please don't hesitate to apply again if you see another position that interests you.
+
+We wish you all the best in your job search and future career endeavors.
+
+Regards,
+{{recruiterName}}
+{{companyName}} Recruiting Team

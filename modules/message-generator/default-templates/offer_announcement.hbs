@@ -1,0 +1,26 @@
+{{!--{"category":"offer","description":"Job offer announcement","variables":["candidateName","position","companyName","startDate","salary"]}--}}
+Dear {{titleCase candidateName}},
+
+I'm delighted to inform you that {{companyName}} would like to offer you the position of {{position}}!
+
+Based on your impressive background and our conversations during the interview process, we believe you would be an excellent addition to our team. Your experience in {{#if candidateSkills}}{{candidateSkills.[0]}}{{else}}your field{{/if}} aligns perfectly with what we're looking for in this role.
+
+{{#if offerDetails}}
+Here's a summary of the offer:
+- Position: {{position}}
+- Salary: {{salary}}
+- Start date: {{#if startDate}}{{formatDate startDate "MMMM D, YYYY"}}{{else}}To be determined{{/if}}
+- Benefits: {{offerDetails.benefits}}
+{{else}}
+A formal offer letter with complete details regarding compensation, benefits, and start date will follow shortly.
+{{/if}}
+
+We're excited about the potential of having you join our team and contribute to our mission to {{companyMission}}.
+
+Please let me know if you have any questions about the offer or need any additional information to help with your decision.
+
+We look forward to your response!
+
+Warm regards,
+{{recruiterName}}
+{{companyName}} Recruiting Team

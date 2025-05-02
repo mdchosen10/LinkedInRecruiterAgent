@@ -1,0 +1,14 @@
+{{!--{"category":"follow_up","description":"Follow-up after interview","variables":["candidateName","position","companyName","interviewDate"]}--}}
+Hi {{candidateName}},
+
+I hope you're doing well! I wanted to thank you for taking the time to interview for the {{position}} role {{#if interviewDate}}on {{formatDate interviewDate "MMMM D, YYYY"}}{{/if}}.
+
+Our team was impressed with {{#if candidateSkills}}your expertise in {{candidateSkills.[0]}}{{else}}your background and experience{{/if}}. We're still in the process of interviewing candidates and expect to make a decision within the next {{decisionTimeframe}}.
+
+If you have any additional questions about the role or our company that came up after the interview, please don't hesitate to reach out.
+
+Thanks again for your interest in {{companyName}}, and we'll be in touch soon with an update.
+
+Best regards,
+{{recruiterName}}
+{{companyName}} Recruiting Team

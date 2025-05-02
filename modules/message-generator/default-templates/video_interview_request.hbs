@@ -1,0 +1,26 @@
+{{!--{"category":"video","description":"Request for candidate to complete video interview","variables":["candidateName","position","companyName","deadline","videoPlatform"]}--}}
+Hi {{candidateName}},
+
+Thank you for applying to the {{position}} position at {{companyName}}. As the next step in our process, we'd like to invite you to complete a short video interview.
+
+{{#if videoPlatform}}
+This interview will be conducted through {{videoPlatform}}. You'll receive a separate email with a link to access the platform and detailed instructions.
+{{else}}
+You'll receive a separate email with a link to access our video interview platform and detailed instructions.
+{{/if}}
+
+The video interview consists of {{videoQuestionCount}} questions and should take approximately {{videoDurationMinutes}} minutes to complete. You'll have the opportunity to re-record your answers before submitting.
+
+{{#if deadline}}
+Please complete this video interview by {{formatDate deadline "MMMM D, YYYY"}}.
+{{else}}
+Please complete this video interview within the next 5 business days.
+{{/if}}
+
+This format allows us to get to know you better while providing flexibility for you to complete it at your convenience.
+
+If you have any questions or require any accommodations, please don't hesitate to reach out.
+
+Best regards,
+{{recruiterName}}
+{{companyName}} Recruiting Team

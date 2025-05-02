@@ -1,0 +1,41 @@
+{
+    "name": "candidate-evaluation-engine",
+    "version": "1.0.0",
+    "description": "AI-powered candidate evaluation engine for recruiting",
+    "main": "candidate-evaluation-engine.js",
+    "scripts": {
+      "start": "node sample-usage.js",
+      "dev": "nodemon sample-usage.js",
+      "test": "jest",
+      "test:watch": "jest --watch"
+    },
+    "keywords": [
+      "recruiting",
+      "candidate",
+      "evaluation",
+      "AI",
+      "HR",
+      "anthropic",
+      "claude"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+      "@anthropic/sdk": "^0.11.0",
+      "dotenv": "^16.3.1"
+    },
+    "devDependencies": {
+      "jest": "^29.7.0",
+      "nodemon": "^3.0.1"
+    },
+    "jest": {
+      "testEnvironment": "node",
+      "verbose": true,
+      "coveragePathIgnorePatterns": [
+        "/node_modules/"
+      ]
+    },
+    "engines": {
+      "node": ">=16.0.0"
+    }
+  }

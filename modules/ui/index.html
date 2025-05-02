@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0077B5" />
+    <meta name="description" content="LinkedIn Recruiter Tool - Manage your candidates and recruiting workflow" />
+    
+    <!-- Import Inter font -->
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    
+    <title>LinkedIn Recruiter Tool</title>
+    <style>
+        /* Use Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0077b5;
+            margin-top: 0;
+        }
+        .tab-container {
+            margin-top: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+        }
+        .tab-button.active {
+            border-bottom: 3px solid #0077b5;
+            color: #0077b5;
+        }
+        .tab-content {
+            padding: 20px 0;
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #0077b5;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005e93;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LinkedIn Recruiter Tool</h1>
+        
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="login">LinkedIn Login</button>
+                <button class="tab-button" data-tab="search">Search Candidates</button>
+                <button class="tab-button" data-tab="candidates">Candidates</button>
+                <button class="tab-button" data-tab="messages">Messages</button>
+            </div>
+            
+            <div id="login" class="tab-content active">
+                <h2>LinkedIn Authentication</h2>
+                <p>Please login with your LinkedIn credentials to begin using the tool.</p>
+                
+                <div class="form-group">
+                    <label for="linkedin-email">LinkedIn Email:</label>
+                    <input type="email" id="linkedin-email" placeholder="your.email@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="linkedin-password">LinkedIn Password:</label>
+                    <input type="password" id="linkedin-password">
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="remember-credentials"> Remember credentials (securely encrypted)
+                    </label>
+                </div>
+                
+                <button id="login-button">Login to LinkedIn</button>
+            </div>
+            
+            <div id="search" class="tab-content">
+                <h2>Search for Candidates</h2>
+                
+                <div class="form-group">
+                    <label for="search-keywords">Keywords (Skills, Job Titles):</label>
+                    <input type="text" id="search-keywords" placeholder="e.g. JavaScript, React, Frontend Developer">
+                </div>
+                
+                <div class="form-group">
+                    <label for="search-location">Location:</label>
+                    <input type="text" id="search-location" placeholder="e.g. New York, Remote">
+                </div>
+                
+                <div class="form-group">
+                    <label for="search-experience">Experience Level:</label>
+                    <select id="search-experience">
+                        <option value="">Any Experience Level</option>
+                        <option value="entry">Entry Level</option>
+                        <option value="mid">Mid-Senior Level</option>
+                        <option value="senior">Senior Level</option>
+                        <option value="executive">Executive Level</option>
+                    </select>
+                </div>
+                
+                <button id="search-button">Search Candidates</button>
+            </div>
+            
+            <div id="candidates" class="tab-content">
+                <h2>Candidate Management</h2>
+                <p>No candidates found. Use the Search tab to find candidates.</p>
+            </div>
+            
+            <div id="messages" class="tab-content">
+                <h2>Message Templates</h2>
+                
+                <div class="form-group">
+                    <label for="message-type">Message Type:</label>
+                    <select id="message-type">
+                        <option value="interview">Interview Invitation</option>
+                        <option value="video">Video Interview Request</option>
+                        <option value="reject">Rejection Message</option>
+                        <option value="offer">Job Offer</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message-template">Template:</label>
+                    <select id="message-template">
+                        <option value="standard">Standard Template</option>
+                        <option value="technical">Technical Role Template</option>
+                        <option value="senior">Senior Position Template</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message-preview">Preview:</label>
+                    <textarea id="message-preview" rows="10" readonly>
+Select a template to preview the message.
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Basic tab functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing UI...');
+            
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Deactivate all tabs
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Activate clicked tab
+                    button.classList.add('active');
+                    const tabId = button.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Check if API is available
+            if (window.api) {
+                console.log('API is available');
+                
+                // Connect login button
+                const loginButton = document.getElementById('login-button');
+                if (loginButton) {
+                    loginButton.addEventListener('click', async function() {
+                        const email = document.getElementById('linkedin-email').value;
+                        const password = document.getElementById('linkedin-password').value;
+                        const remember = document.getElementById('remember-credentials').checked;
+                        
+                        if (!email || !password) {
+                            alert('Please enter both email and password');
+                            return;
+                        }
+                        
+                        try {
+                            loginButton.disabled = true;
+                            loginButton.textContent = 'Logging in...';
+                            
+                            const result = await window.api.loginToLinkedIn({
+                                username: email,
+                                password: password,
+                                userId: 1, // Default user ID
+                                rememberCredentials: remember
+                            });
+                            
+                            if (result.success) {
+                                alert('Login successful!');
+                                // Switch to search tab
+                                document.querySelector('.tab-button[data-tab="search"]').click();
+                            } else {
+                                alert('Login failed: ' + (result.message || 'Unknown error'));
+                            }
+                        } catch (error) {
+                            alert('Error during login: ' + error.message);
+                            console.error('Login error:', error);
+                        } finally {
+                            loginButton.disabled = false;
+                            loginButton.textContent = 'Login to LinkedIn';
+                        }
+                    });
+                }
+                
+                // Connect search button
+                const searchButton = document.getElementById('search-button');
+                if (searchButton) {
+                    searchButton.addEventListener('click', async function() {
+                        const keywords = document.getElementById('search-keywords').value;
+                        const location = document.getElementById('search-location').value;
+                        const experience = document.getElementById('search-experience').value;
+                        
+                        if (!keywords) {
+                            alert('Please enter search keywords');
+                            return;
+                        }
+                        
+                        try {
+                            searchButton.disabled = true;
+                            searchButton.textContent = 'Searching...';
+                            
+                            const criteria = {
+                                keywords,
+                                location,
+                                experienceLevel: experience
+                            };
+                            
+                            const result = await window.api.searchLinkedIn(criteria);
+                            
+                            if (result.success) {
+                                alert(`Found ${result.candidates.length} candidates`);
+                                // Switch to candidates tab and display results
+                                document.querySelector('.tab-button[data-tab="candidates"]').click();
+                            } else {
+                                alert('Search failed: ' + (result.message || 'Unknown error'));
+                            }
+                        } catch (error) {
+                            alert('Error during search: ' + error.message);
+                            console.error('Search error:', error);
+                        } finally {
+                            searchButton.disabled = false;
+                            searchButton.textContent = 'Search Candidates';
+                        }
+                    });
+                }
+            } else {
+                console.error('API not available. Check that the preload script is properly configured.');
+                document.body.innerHTML = `
+                    <div style="padding: 20px; color: red; text-align: center;">
+                        <h2>Error: API Not Available</h2>
+                        <p>The application couldn't connect to the backend API.</p>
+                        <p>Please check that the preload script is properly configured.</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
