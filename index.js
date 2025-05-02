@@ -9,9 +9,8 @@ const config = require('./config/default');
 // Add these lines before your window creation to help prevent GPU issues
 app.commandLine.appendSwitch('disable-gpu');
 app.disableHardwareAcceleration();
-//allow unrestricted script execution:
+// Allow unrestricted script execution:
 app.commandLine.appendSwitch('disable-site-isolation-trials');
-  
 
 // Import modules
 const { initialize: initializeDataStorage } = require('./modules/data-storage/data-storage');
@@ -96,21 +95,26 @@ function createWindow() {
     console.log(`Checking preload at ${p}: ${fs.existsSync(p) ? '✅ EXISTS' : '❌ NOT FOUND'}`);
   });
   
-  // Rest of your createWindow function...
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
-      // We'll determine this path based on the diagnostics
-      preload: path.join(__dirname, 'modules/ui/electron/preload.js'), // Default to root for now
+      preload: path.resolve(__dirname, 'electron-app/preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: false,
-      enableWebSQL: false,
-      webgl: false
+      sandbox: false
     }
   });
 
+  // Add debugging code
+  mainWindow.webContents.on('dom-ready', () => {
+    mainWindow.webContents.executeJavaScript(`
+      console.log("DOM ready, window.api:", window.api ? "Available" : "Not available");
+      if (window.api) console.log("API methods:", Object.keys(window.api));
+    `);
+  });
+  
   // Load the built React app
   const reactAppPath = path.join(__dirname, 'modules/ui/build/index.html');
   console.log('Loading React app from:', reactAppPath);
@@ -119,8 +123,14 @@ function createWindow() {
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000');
   } else {
-    mainWindow.loadFile(path.join(__dirname, 'modules/ui/build/index.html'));
+    const filePath = path.join(__dirname, 'modules/ui/build/index.html');
+    mainWindow.loadURL(`file://${filePath}`);
   }
+
+  // Open DevTools for debugging
+  mainWindow.webContents.openDevTools();
+  
+  return mainWindow;
 }
 
 // Electron app events
@@ -129,12 +139,11 @@ app.whenReady().then(async () => {
     // Initialize modules
     const { workflowManager } = await initializeApplication();
     
-    // Set up IPC handlers - add this line
+    // Set up IPC handlers
     setupIpcHandlers(workflowManager);
     
     // Expose integration APIs to the UI via preload script
     global.workflowManager = workflowManager;
-
 
     // Create UI window
     createWindow();

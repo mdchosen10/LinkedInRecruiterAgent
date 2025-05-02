@@ -1,2 +1,0 @@
-@tailwind base;@tailwind components;@tailwind utilities;@layer base{body,h1,h2,h3{@apply text-lg font-bold mb-2}}@layer components{.avatar,.badge,.badge-danger,.badge-info,.badge-success,.badge-warning,.btn,.btn-danger,.btn-primary,.btn-secondary,.card,.form-error,.form-label,.input{@apply mt-1 text-sm text-red-600}}@layer utilities{.text-ellipsis{@apply overflow-hidden whitespace-nowrap text-ellipsis}}
-/*# sourceMappingURL=main.c59eb793.css.map*/

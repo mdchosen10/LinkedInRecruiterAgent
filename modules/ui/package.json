@@ -1,6 +1,6 @@
 {
   "name": "linkedin-recruiter-ui",
-  "homepage": ".",
+  "homepage": "./",
   "version": "1.0.0",
   "description": "React UI for LinkedIn Recruiter Tool",
   "private": true,
