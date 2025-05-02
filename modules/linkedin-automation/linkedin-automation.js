@@ -48,122 +48,273 @@ class LinkedInAutomation extends EventEmitter {
     }
   }
 
-  /**
-   * Initialize the browser instance
-   */
-  async init() {
-    try {
-      this.browser = await chromium.launchPersistentContext(this.options.userDataDir, {
-        headless: this.options.headless,
-        slowMo: 50, // Slow down operations by 50ms to appear more human-like
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36',
-        viewport: { width: 1280, height: 800 },
-        acceptDownloads: true,
-        // Below options help avoid detection
-        deviceScaleFactor: 1,
-        hasTouch: false,
-        defaultBrowserType: 'chromium',
-        bypassCSP: true, // Needed for some operations on LinkedIn
-        downloadsPath: this.options.downloadPath,
-      });
-      
-      this.page = await this.browser.newPage();
-      
-      // Set default timeout
-      this.page.setDefaultTimeout(60000);
-      
-      // Add random mouse movements and anti-detection measures
-      await this._setupAntiDetection();
-      
+/**
+ * Initialize the browser instance using an existing profile
+ */
+async init() {
+  try {
+    this.browser = await chromium.launchPersistentContext(this.options.userDataDir, {
+      headless: false,
+      slowMo: 50,
+      args: [
+        '--disable-blink-features=AutomationControlled',
+        '--disable-features=AutomationControlled',
+        '--no-sandbox',
+        '--disable-web-security',
+        '--disable-features=IsolateOrigins,site-per-process',
+        '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
+      ],
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36',
+      viewport: { width: 1280, height: 800 },
+      acceptDownloads: true,
+      deviceScaleFactor: 1,
+      hasTouch: false,
+      defaultBrowserType: 'chromium',
+      bypassCSP: true,
+      downloadsPath: this.options.downloadPath,
+      ignoreHTTPSErrors: true
+    });
+    
+    this.page = await this.browser.newPage();
+    this.page.setDefaultTimeout(60000);
+    await this._setupAntiDetection();
+    
+    return true;
+  } catch (error) {
+    console.error('Failed to initialize browser:', error);
+    throw new Error(`Browser initialization failed: ${error.message}`);
+  }
+}
+/**
+ * Ensure the user is logged in to LinkedIn
+ * @returns {boolean} - Whether the user is logged in
+ */
+async ensureLoggedIn() {
+  if (this.isLoggedIn) {
+    return true;
+  }
+  
+  try {
+    console.log('Checking LinkedIn login status...');
+    
+    // First navigate to LinkedIn homepage
+    await this.page.goto('https://www.linkedin.com/', {
+      waitUntil: 'domcontentloaded',
+      timeout: 60000
+    });
+    
+    // Wait for a moment to let any detection scripts run
+    await this.page.waitForTimeout(3000);
+    
+    // Take a screenshot for debugging
+    await this.page.screenshot({ path: 'linkedin-home.png' });
+    
+    // Check if we're already on the feed (already logged in)
+    const url = this.page.url();
+    if (url.includes('/feed')) {
+      this.isLoggedIn = true;
+      console.log('Already logged in to LinkedIn.');
       return true;
-    } catch (error) {
-      console.error('Failed to initialize browser:', error);
-      throw new Error(`Browser initialization failed: ${error.message}`);
     }
+    
+    console.log('Not logged in. Navigating to login page...');
+    
+    // For LinkedIn, we may need to click the sign in button first from homepage
+    try {
+      const signInButton = await this.page.$('a[href="/login"], a.nav__button-secondary, a:has-text("Sign in")');
+      if (signInButton) {
+        await signInButton.click();
+        await this.page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+      }
+    } catch (error) {
+      console.log('No sign in button found on homepage, might already be on login page');
+    }
+    
+    // Check if we're on login page
+    if (!this.page.url().includes('/login')) {
+      await this.page.goto('https://www.linkedin.com/login', { 
+        waitUntil: 'domcontentloaded'
+      });
+    }
+    
+    // Take a screenshot of login page
+    await this.page.screenshot({ path: 'linkedin-login.png' });
+    
+    console.log('Waiting for user to log in manually...');
+    console.log('Please log in to LinkedIn in the browser window that opened.');
+    
+    // Wait for navigation to feed page (after successful login)
+    try {
+      await this.page.waitForNavigation({ 
+        url: url => url.includes('/feed'),
+        timeout: 300000 // 5 minute timeout
+      });
+    } catch (error) {
+      console.error('Timeout waiting for login. Please try again:', error);
+      throw new Error('Login timed out after 5 minutes. Please try again.');
+    }
+    
+    // Double check login status
+    this.isLoggedIn = await this._checkIfLoggedIn();
+    
+    if (!this.isLoggedIn) {
+      throw new Error('Login verification failed. Please try again.');
+    }
+    
+    console.log('Successfully logged in to LinkedIn!');
+    return true;
+  } catch (error) {
+    console.error('Login process failed:', error);
+    throw error;
   }
-
-  /**
-   * Set up anti-detection measures
-   */
-  async _setupAntiDetection() {
-    // Override navigator properties that might be used for fingerprinting
-    await this.page.addInitScript(() => {
-      // Override properties used for bot detection
-      const overrides = {
-        webdriver: false,
-        __selenium_unwrapped: undefined,
-        __webdriver_evaluate: undefined,
-        _phantom: undefined,
-        callPhantom: undefined,
-        phantom: undefined,
-        navigator: {
-          webdriver: false,
-        },
-      };
+}
+/**
+ * Set up enhanced anti-detection measures
+ */
+async _setupAntiDetection() {
+  // Add more robust browser fingerprint evasion
+  await this.page.addInitScript(() => {
+    // Override property descriptors to avoid detection
+    const originalDescriptorGetter = Object.getOwnPropertyDescriptor;
+    Object.getOwnPropertyDescriptor = function(obj, prop) {
+      // Return the original descriptor by default
+      const originalDescriptor = originalDescriptorGetter(obj, prop);
       
-      // Apply the overrides
-      for (const key in overrides) {
-        if (overrides[key] === undefined) {
-          delete window[key];
-          continue;
-        }
-        
-        // Otherwise define the property
+      if (obj === navigator && prop === 'webdriver') {
+        // Hide webdriver property
+        return { get: () => false };
+      }
+      
+      return originalDescriptor;
+    };
+    
+    // Override all the obvious automation flags
+    const overrides = {
+      webdriver: false,
+      __driver_evaluate: undefined,
+      __webdriver_evaluate: undefined,
+      __selenium_evaluate: undefined,
+      __fxdriver_evaluate: undefined,
+      __driver_unwrapped: undefined,
+      __webdriver_unwrapped: undefined,
+      __selenium_unwrapped: undefined,
+      __fxdriver_unwrapped: undefined,
+      _Selenium_IDE_Recorder: undefined,
+      _selenium: undefined,
+      calledSelenium: undefined,
+      _WEBDRIVER_ELEM_CACHE: undefined,
+      ChromeDriverw: undefined,
+      domAutomation: undefined,
+      domAutomationController: undefined,
+      __lastWatirAlert: undefined,
+      __lastWatirConfirm: undefined,
+      __lastWatirPrompt: undefined,
+      '$cdc_asdjflasutopfhvcZLmcfl_': undefined,
+      '$chrome_asyncScriptInfo': undefined
+    };
+    
+    // Apply all overrides
+    for (const key in overrides) {
+      if (key in window) {
         Object.defineProperty(window, key, {
-          get() {
-            return overrides[key];
-          },
+          get: () => overrides[key],
           configurable: true
         });
       }
-      
-      // Override navigator properties
-      for (const key in overrides.navigator) {
-        Object.defineProperty(Object.getPrototypeOf(navigator), key, {
-          get() {
-            return overrides.navigator[key];
-          },
+    }
+    
+    // Override navigator properties
+    const navigatorProps = {
+      webdriver: false,
+      userAgent: navigator.userAgent.replace(/HeadlessChrome\/[^ ]+/g, ''),
+      // Add randomized hardware concurrency (CPU cores)
+      hardwareConcurrency: 4 + Math.floor(Math.random() * 4), 
+      deviceMemory: 8 + Math.floor(Math.random() * 8),
+      languages: ['en-US', 'en', 'es'],
+      platform: 'Win32',
+    };
+    
+    for (const prop in navigatorProps) {
+      if (prop in navigator) {
+        Object.defineProperty(navigator, prop, {
+          get: () => navigatorProps[prop],
           configurable: true
         });
       }
+    }
+    
+    // Override Permissions API
+    if (navigator.permissions) {
+      const originalQuery = navigator.permissions.query;
+      navigator.permissions.query = function(parameters) {
+        if (parameters.name === 'notifications') {
+          return Promise.resolve({ state: 'granted' });
+        }
+        return originalQuery.call(navigator.permissions, parameters);
+      };
+    }
+    
+    // Add fake plugins
+    Object.defineProperty(navigator, 'plugins', {
+      get: () => {
+        // Create fake plugin array with length and a few items
+        const fakePlugins = {
+          length: 5,
+          item: index => fakePlugins[index] || null,
+          namedItem: name => fakePlugins[name] || null,
+          refresh: () => {},
+          0: { name: 'Chrome PDF Plugin', filename: 'internal-pdf-viewer' },
+          1: { name: 'Chrome PDF Viewer', filename: 'mhjfbmdgcfjbbpaeojofohoefgiehjai' },
+          2: { name: 'Native Client', filename: 'internal-nacl-plugin' },
+          3: { name: 'Widevine Content Decryption Module', filename: 'widevinecdmadapter.dll' },
+          4: { name: 'Shockwave Flash', filename: 'pepflashplayer.dll' }
+        };
+        
+        return fakePlugins;
+      },
+      configurable: true
+    });
+  });
+  
+  // Continue with the rest of your event setup
+  this.page.on('request', req => {
+    this.requestCounter++;
+    this.lastRequestTime = Date.now();
+  });
+  
+  // Setup download handling
+  this.page.on('download', async download => {
+    const fileName = download.suggestedFilename();
+    const filePath = path.join(this.options.downloadPath, fileName);
+    await download.saveAs(filePath);
+    console.log(`File downloaded: ${filePath}`);
+  });
+  
+  // Listen for console messages 
+  this.page.on('console', msg => {
+    if (msg.type() === 'error' || msg.type() === 'warning') {
+      console.log(`Browser ${msg.type()}: ${msg.text()}`);
+    }
+  });
+  
+  // Add random mouse movements to appear more human
+  await this.page.evaluate(() => {
+    // Simulate some mouse movements
+    for (let i = 0; i < 10; i++) {
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * window.innerHeight;
       
-      // Prevent detection of automation
-      Object.defineProperty(navigator, 'plugins', {
-        get: function() {
-          return [1, 2, 3, 4, 5];
-        },
+      const event = new MouseEvent('mousemove', {
+        bubbles: true,
+        cancelable: true,
+        clientX: x,
+        clientY: y
       });
       
-      // Add fake language array
-      Object.defineProperty(navigator, 'languages', {
-        get: function() {
-          return ['en-US', 'en', 'es'];
-        },
-      });
-    });
-    
-    // Add event listeners to handle rate limiting
-    this.page.on('request', req => {
-      this.requestCounter++;
-      this.lastRequestTime = Date.now();
-    });
-    
-    // Setup download handling
-    this.page.on('download', async download => {
-      const fileName = download.suggestedFilename();
-      const filePath = path.join(this.options.downloadPath, fileName);
-      await download.saveAs(filePath);
-      console.log(`File downloaded: ${filePath}`);
-    });
-    
-    // Listen for console messages from the page for debugging
-    this.page.on('console', msg => {
-      if (msg.type() === 'error' || msg.type() === 'warning') {
-        console.log(`Browser ${msg.type()}: ${msg.text()}`);
-      }
-    });
-  }
-
+      document.dispatchEvent(event);
+    }
+  });
+}
   /**
    * Store user credentials securely using keytar
    * @param {string} email 
@@ -240,57 +391,60 @@ class LinkedInAutomation extends EventEmitter {
     await this.page.waitForTimeout(baseDelay + randomDelay);
   }
 
-  /**
-   * Log in to LinkedIn
-   * @param {string} email - LinkedIn email 
-   * @param {string} password - LinkedIn password
-   * @param {boolean} rememberCredentials - Whether to store credentials securely
-   */
-async loginToLinkedIn(credentials, userId) {
+/**
+ * Log in to LinkedIn
+ * @param {string} email - LinkedIn email 
+ * @param {string} password - LinkedIn password
+ * @param {boolean} rememberCredentials - Whether to store credentials securely
+ * @returns {boolean} - Success status
+ */
+async login(email, password, rememberCredentials = false) {
   try {
-    // Initialize LinkedIn automation if it's not already initialized
-    if (this.linkedInAutomation.init && !this.linkedInAutomation.browser) {
-      await this.linkedInAutomation.init();
+    await this._enforceRateLimit();
+    
+    // Initialize browser if needed
+    if (!this.browser) {
+      await this.init();
     }
     
-    // Fix the user ID issue first - we need to check if the user exists
-    try {
-      const user = await this.dataStorage.userModel.getById(userId);
-      if (!user) {
-        // Create a temporary user record or return an error
-        console.error('User not found in database. Please create a user account first.');
-        return { 
-          success: false, 
-          message: 'User not found in database. Please create a user account first.' 
-        };
-      }
-    } catch (error) {
-      console.error('Error checking user:', error);
-      return { success: false, message: 'Database error: ' + error.message };
+    // Navigate to LinkedIn login page
+    await this.page.goto('https://www.linkedin.com/login', {
+      waitUntil: 'networkidle'
+    });
+    
+    // Fill in the login form
+    await this.page.fill('input[name="session_key"]', email);
+    await this.page.fill('input[name="session_password"]', password);
+    
+    // Add a small delay before clicking to seem more human-like
+    await this._addHumanDelay();
+    
+    // Click the sign-in button
+    await this.page.click('button[type="submit"]');
+    
+    // Wait for navigation to complete
+    await this.page.waitForLoadState('networkidle');
+    
+    // Check for any security checks
+    await this._handleSecurityChecks();
+    
+    // Verify that we're logged in
+    this.isLoggedIn = await this._checkIfLoggedIn();
+    
+    if (!this.isLoggedIn) {
+      throw new Error('Login failed. Please check your credentials and try again.');
     }
     
-    // Only save credentials if explicitly requested
-    if (credentials.rememberCredentials) {
-      try {
-        await this.dataStorage.saveLinkedInCredentials(userId, credentials);
-        console.log('LinkedIn credentials saved for user', userId);
-      } catch (error) {
-        console.error('Error saving credentials:', error);
-        // We'll continue with login even if saving fails
-      }
+    // Store credentials if requested
+    if (rememberCredentials) {
+      await this.storeCredentials(email, password);
     }
     
-    // Proceed with LinkedIn login
-    const result = await this.linkedInAutomation.login(
-      credentials.username,
-      credentials.password,
-      credentials.rememberCredentials || false
-    );
-    
-    return { success: true };
+    console.log('Successfully logged in to LinkedIn');
+    return true;
   } catch (error) {
-    console.error('LinkedIn login error:', error);
-    return { success: false, message: error.message };
+    console.error('LinkedIn login failed:', error);
+    throw new Error(`Login to LinkedIn failed: ${error.message}`);
   }
 }
   

@@ -9,6 +9,8 @@ const config = require('./config/default');
 // Add these lines before your window creation to help prevent GPU issues
 app.commandLine.appendSwitch('disable-gpu');
 app.disableHardwareAcceleration();
+//allow unrestricted script execution:
+app.commandLine.appendSwitch('disable-site-isolation-trials');
   
 
 // Import modules
@@ -63,20 +65,57 @@ async function initializeApplication() {
 
 // Create main application window
 function createWindow() {
+  const fs = require('fs');
+  
+  // Check parent directories
+  console.log('__dirname:', __dirname);
+  const parentDir = path.join(__dirname, 'modules/ui');
+  if (fs.existsSync(parentDir)) {
+    console.log('✅ modules/ui directory exists');
+    console.log('Contents of modules/ui:', fs.readdirSync(parentDir));
+    
+    const electronDir = path.join(parentDir, 'electron');
+    if (fs.existsSync(electronDir)) {
+      console.log('✅ modules/ui/electron directory exists');
+      console.log('Contents of modules/ui/electron:', fs.readdirSync(electronDir));
+    } else {
+      console.log('❌ modules/ui/electron directory does not exist');
+    }
+  } else {
+    console.log('❌ modules/ui directory does not exist');
+  }
+  
+  // Check for preload files at various locations
+  const preloadPaths = [
+    path.join(__dirname, 'preload.js'),
+    path.join(__dirname, 'electron-app/preload.js'),
+    path.join(__dirname, 'modules/ui/electron/preload.js')
+  ];
+  
+  preloadPaths.forEach(p => {
+    console.log(`Checking preload at ${p}: ${fs.existsSync(p) ? '✅ EXISTS' : '❌ NOT FOUND'}`);
+  });
+  
+  // Rest of your createWindow function...
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
-      preload: path.join(__dirname, 'electron-app/preload.js'),
+      // We'll determine this path based on the diagnostics
+      preload: path.join(__dirname, 'modules/ui/electron/preload.js'), // Default to root for now
       nodeIntegration: false,
       contextIsolation: true,
+      webSecurity: false,
       enableWebSQL: false,
       webgl: false
     }
   });
 
+  // Load the built React app
+  const reactAppPath = path.join(__dirname, 'modules/ui/build/index.html');
+  console.log('Loading React app from:', reactAppPath);
   
-  mainWindow.loadFile(path.join(__dirname, 'modules/ui/index.html'));
+  mainWindow.loadURL(`file://${reactAppPath}`);
   mainWindow.webContents.openDevTools();
 }
 
@@ -91,11 +130,18 @@ app.whenReady().then(async () => {
     
     // Expose integration APIs to the UI via preload script
     global.workflowManager = workflowManager;
-    
+
+
     // Create UI window
     createWindow();
   } catch (error) {
     console.error('Application initialization failed:', error);
+    app.quit();
+  }
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
     app.quit();
   }
 });

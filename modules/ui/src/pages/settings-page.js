@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { useData } from '../contexts/DataContext';
-import { useAuth } from '../contexts/AuthContext';
+import { useData } from '../contexts/data-context';
+import { useAuth } from '../contexts/auth-context';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 // Components
-import EvaluationCriteriaSettings from '../components/settings/EvaluationCriteriaSettings';
-import LinkedInSettingsForm from '../components/settings/LinkedInSettingsForm';
-import NotificationSettings from '../components/settings/NotificationSettings';
-import AccountSettings from '../components/settings/AccountSettings';
+import EvaluationCriteriaSettings from '../components/settings/evaluation-criteria-settings';
+import LinkedInSettingsForm from '../components/settings/linkedin-settings-form';
+import NotificationSettings from '../components/settings/notifcation-settings';
+import AccountSettings from '../components/settings/account-settings';
 
 // Icons
 import { CheckCircleIcon } from '@heroicons/react/24/outline';

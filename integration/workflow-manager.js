@@ -245,16 +245,25 @@ class WorkflowManager {
     return templates[messageType] || `Regarding Your Application for ${messageData.position}`;
   }
   
-  /**
-   * Log in to LinkedIn with credentials
-   * @param {Object} credentials - LinkedIn credentials
-   * @param {number} userId - User ID
-   */
-async loginToLinkedIn(credentials, userId) {
+/**
+ * Connect to LinkedIn with existing session
+ * @param {number} userId - User ID
+ */
+async connectToLinkedIn(userId) {
   try {
     // Initialize LinkedIn automation if it's not already initialized
-    if (this.linkedInAutomation.init && !this.linkedInAutomation.browser) {
+    if (!this.linkedInAutomation.browser) {
       await this.linkedInAutomation.init();
+    }
+    
+    // Check if we're logged in
+    const isLoggedIn = await this.linkedInAutomation.ensureLoggedIn();
+    
+    if (!isLoggedIn) {
+      return { 
+        success: false, 
+        message: 'Not logged in to LinkedIn. Please log in manually first.' 
+      };
     }
     
     // Fix the user ID issue - create a default user if one doesn't exist
@@ -269,23 +278,14 @@ async loginToLinkedIn(credentials, userId) {
         console.log('Error checking for user, will attempt to create one:', error.message);
       }
       
-      // In workflow-manager.js
-// Inside the loginToLinkedIn method, update the user creation part:
-
       if (!user) {
         // Create a default user record
         console.log('Creating default user account...');
         try {
-          // Generate a username from the email address
-          const email = credentials.username || 'default@example.com';
-          const derivedUsername = email.split('@')[0]  // Take the part before @ symbol
-            .replace(/[^a-zA-Z0-9]/g, '')  // Remove non-alphanumeric characters
-            .substring(0, 30);  // Limit length to 30 characters
-            
           await this.dataStorage.userModel.create({
             id: effectiveUserId,
-            username: derivedUsername || 'defaultuser',  // Use derived username
-            email: email,  // Store the full email as the email field
+            username: 'defaultuser',  
+            email: 'default@example.com',
             password: 'defaultpassword',
             name: 'Default User',
             role: 'recruiter'
@@ -304,28 +304,12 @@ async loginToLinkedIn(credentials, userId) {
       // Continue anyway - we've tried our best to create a user
     }
     
-    // Rest of your existing code...
-    // Only save credentials if explicitly requested
-    if (credentials.rememberCredentials) {
-      try {
-        await this.dataStorage.saveLinkedInCredentials(userId || 1, credentials);
-        console.log('LinkedIn credentials saved for user', userId || 1);
-      } catch (error) {
-        console.error('Error saving credentials:', error);
-        // We'll continue with login even if saving fails
-      }
-    }
-    
-    // Proceed with LinkedIn login
-    const result = await this.linkedInAutomation.login(
-      credentials.username,
-      credentials.password,
-      credentials.rememberCredentials || false
-    );
-    
-    return { success: true };
+    return { 
+      success: true,
+      message: 'Successfully connected to LinkedIn' 
+    };
   } catch (error) {
-    console.error('LinkedIn login error:', error);
+    console.error('LinkedIn connection error:', error);
     return { success: false, message: error.message };
   }
 }

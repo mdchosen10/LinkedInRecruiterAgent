@@ -4,9 +4,11 @@
   "description": "Automated LinkedIn recruitment system with AI evaluation and messaging",
   "main": "index.js",
   "scripts": {
-    "start": "electron .",
-    "dev": "NODE_ENV=development electron .",
+    "build:react": "cd modules/ui && npm run build",
+    "prebuild": "npm run build:react",
     "build": "electron-builder",
+    "start": "npm run build:react && electron .",
+    "dev": "NODE_ENV=development electron .",
     "setup": "node setup.js"
   },
   "dependencies": {

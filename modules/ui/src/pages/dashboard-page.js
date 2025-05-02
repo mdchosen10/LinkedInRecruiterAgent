@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useData } from '../contexts/DataContext';
+import { useData } from '../contexts/data-context';
 
 // Components
-import CandidateCard from '../components/candidates/CandidateCard';
-import DashboardStats from '../components/dashboard/DashboardStats';
-import ActivityFeed from '../components/dashboard/ActivityFeed';
-import RecentMessages from '../components/dashboard/RecentMessages';
-import DashboardFilters from '../components/dashboard/DashboardFilters';
+import CandidateCard from '../components/candidates/candidate-card';
+import DashboardStats from '../components/candidates/dashboard/dashboard-stats';
+import ActivityFeed from '../components/candidates/dashboard/activity-feed';
+import RecentMessages from '../components/candidates/dashboard/recent-messages';
+import DashboardFilters from '../components/candidates/dashboard/dashboard-filters';
 
 // Charts
-import CandidateScoreChart from '../components/dashboard/CandidateScoreChart';
+import CandidateScoreChart from '../components/candidates/dashboard/candidate-score-chart';
 
 // Icons
 import { UserPlusIcon } from '@heroicons/react/24/outline';

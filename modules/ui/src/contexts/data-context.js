@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { useAuth } from './AuthContext';
+import { useAuth } from './auth-context';
 
 // Sample data (would come from API in production)
 import { 
   getSampleCandidates, 
   getSampleEvaluationCriteria 
-} from '../services/sampleData';
+} from '../services/sample-data';
 
 // Create context
 const DataContext = createContext(null);

@@ -1,0 +1,651 @@
+Project Structure:
+└── .gitignore
+└── config/
+    ├── default.js
+    ├── test.js
+└── data/
+    ├── backups/
+    ├── linkedin-recruiter.db
+    ├── linkedin_recruiter.db
+    ├── test_backups/
+└── downloads/
+└── electron-app/
+    ├── preload.js
+└── fix-database.js
+└── index.js
+└── integration/
+    ├── api-gateway.js
+    ├── workflow-manager.js
+└── integration-test.js
+└── ipc-handlers.js
+└── linkedin-home.png
+└── modules/
+    ├── data-storage/
+    │   ├── data-storage.js
+    ├── evaluation-engine/
+    │   ├── candidate-evaluation-engine.js
+    │   ├── examples/
+    │   │   ├── usage-example.js
+    │   ├── package.json
+    │   ├── prompts/
+    │   │   ├── evaluation-prompt.yaml
+    │   │   ├── experience-prompt.yaml
+    │   │   ├── technical-prompt.yaml
+    │   ├── README.md
+    │   ├── test/
+    │   │   └── candidate-evaluation-engine-test.js
+    ├── linkedin-automation/
+    │   ├── electron-integration.js
+    │   ├── linkedin-automation.js
+    │   ├── package.json
+    │   ├── README.md
+    │   ├── src/
+    │   │   ├── preload.js
+    │   │   ├── usage-examples.js
+    │   ├── ui/
+    │   │   └── index.html
+    ├── message-generator/
+    │   ├── default-templates/
+    │   │   ├── application_received.hbs
+    │   │   ├── follow_up_after_interview.hbs
+    │   │   ├── interview_invitation_senior.hbs
+    │   │   ├── interview_invitation_standard.hbs
+    │   │   ├── interview_invitation_technical.hbs
+    │   │   ├── offer_announcement.hbs
+    │   │   ├── rejection_after_interview.hbs
+    │   │   ├── rejection_standard.hbs
+    │   │   ├── video_interview_request.hbs
+    │   ├── default-templates.js
+    │   ├── example-usage.js
+    │   ├── index.js
+    │   ├── integration-module.js
+    │   ├── message-generator-api.js
+    │   ├── message-generator.js
+    │   ├── package.json
+    │   ├── README.md
+    │   ├── routes/
+    │   │   ├── setup.js
+    │   ├── templates/
+    │   ├── tests/
+    │   │   └── message-generator-test.js
+    ├── ui/
+    │   └── Architecture.md
+    │   └── desktop.ini
+    │   └── electron/
+    │       ├── main.js
+    │       ├── preload.js
+    │   └── index.html
+    │   └── package.json
+    │   └── public/
+    │       ├── index.html
+    │       ├── index.txt
+    │   └── README.md
+    │   └── src/
+    │       ├── assets/
+    │       │   ├── styles/
+    │       │   │   ... (max depth reached)
+    │       ├── components/
+    │       │   ├── candidates/
+    │       │   │   ... (max depth reached)
+    │       │   ├── common/
+    │       │   │   ... (max depth reached)
+    │       │   ├── messaging/
+    │       │   │   ... (max depth reached)
+    │       │   ├── settings/
+    │       │   │   ... (max depth reached)
+    │       ├── contexts/
+    │       │   ├── auth-context.js
+    │       │   ├── data-context.js
+    │       ├── index.js
+    │       ├── pages/
+    │       │   ├── candidate-profile-page.js
+    │       │   ├── candidates-page.js
+    │       │   ├── dashboard-page.js
+    │       │   ├── login-page.js
+    │       │   ├── messaging-page.js
+    │       │   ├── settings-page.js
+    │       ├── services/
+    │       │   └── sample-data.js
+    │   └── tailwind.config
+└── package-lock.json
+└── package.json
+└── print-structure.js
+└── project-structure-check.js
+└── project-structure.csv
+└── setup.js
+└── user_data/
+    └── BrowserMetrics/
+        ├── BrowserMetrics-68148CBC-1E8C.pma
+    └── BrowserMetrics-spare.pma
+    └── component_crx_cache/
+        ├── metadata.json
+    └── Crashpad/
+        ├── attachments/
+        ├── metadata
+        ├── reports/
+        ├── settings.dat
+    └── Default/
+        ├── Account Web Data
+        ├── Account Web Data-journal
+        ├── Affiliation Database
+        ├── Affiliation Database-journal
+        ├── AutofillStrikeDatabase/
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        ├── blob_storage/
+        │   ├── e8ac4702-b7b5-411a-88a6-ed4c9531cfb1/
+        ├── BrowsingTopicsSiteData
+        ├── BrowsingTopicsSiteData-journal
+        ├── BrowsingTopicsState
+        ├── BudgetDatabase/
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        ├── Cache/
+        │   ├── Cache_Data/
+        │   │   └── data_0
+        │   │   └── data_1
+        │   │   └── data_2
+        │   │   └── data_3
+        │   │   └── f_000001
+        │   │   └── f_000002
+        │   │   └── f_000003
+        │   │   └── f_000004
+        │   │   └── f_000005
+        │   │   └── f_000006
+        │   │   └── f_000007
+        │   │   └── f_000009
+        │   │   └── f_00000a
+        │   │   └── f_00000b
+        │   │   └── f_00000c
+        │   │   └── f_00000d
+        │   │   └── f_00000e
+        │   │   └── f_00000f
+        │   │   └── f_000010
+        │   │   └── f_000011
+        │   │   └── f_000012
+        │   │   └── f_000013
+        │   │   └── f_000014
+        │   │   └── f_000015
+        │   │   └── f_000016
+        │   │   └── f_000017
+        │   │   └── f_000018
+        │   │   └── f_000019
+        │   │   └── f_00001a
+        │   │   └── f_00001b
+        │   │   └── f_00001c
+        │   │   └── f_00001d
+        │   │   └── f_00001e
+        │   │   └── f_00001f
+        │   │   └── f_000020
+        │   │   └── f_000021
+        │   │   └── f_000022
+        │   │   └── f_000023
+        │   │   └── f_000024
+        │   │   └── f_000026
+        │   │   └── f_000027
+        │   │   └── f_000028
+        │   │   └── f_000029
+        │   │   └── f_00002a
+        │   │   └── f_00002b
+        │   │   └── f_00002c
+        │   │   └── f_00002d
+        │   │   └── f_00002e
+        │   │   └── f_00002f
+        │   │   └── f_000030
+        │   │   └── f_000032
+        │   │   └── f_000033
+        │   │   └── f_000034
+        │   │   └── f_000035
+        │   │   └── f_000036
+        │   │   └── f_000037
+        │   │   └── f_000038
+        │   │   └── f_000039
+        │   │   └── f_00003a
+        │   │   └── f_00003b
+        │   │   └── f_00003c
+        │   │   └── f_00003d
+        │   │   └── f_00003e
+        │   │   └── f_00003f
+        │   │   └── f_000040
+        │   │   └── f_000041
+        │   │   └── f_000042
+        │   │   └── f_000043
+        │   │   └── f_000044
+        │   │   └── f_000045
+        │   │   └── f_000046
+        │   │   └── f_000047
+        │   │   └── index
+        ├── chrome_cart_db/
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        ├── ClientCertificates/
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        ├── Code Cache/
+        │   ├── js/
+        │   │   ├── 004518949d2869b5_0
+        │   │   ├── 027886c01faa52e5_0
+        │   │   ├── 03c6223960f5a2b3_0
+        │   │   ├── 04d43a092598d387_0
+        │   │   ├── 0697410bec72d08d_0
+        │   │   ├── 07798e95d1a0d836_0
+        │   │   ├── 093f948b0368e8b5_0
+        │   │   ├── 0a7d48c18ee02f79_0
+        │   │   ├── 0c6f6dfe76c22223_0
+        │   │   ├── 0c73ba78a052ca7b_0
+        │   │   ├── 0f7887b16e8a6079_0
+        │   │   ├── 1008cee5c86b3d8f_0
+        │   │   ├── 11670333fb4c949b_0
+        │   │   ├── 14887e1cd0de54e0_0
+        │   │   ├── 17f658f960ce93c2_0
+        │   │   ├── 1c83a0d04ac8c9af_0
+        │   │   ├── 1d59026a02fc5594_0
+        │   │   ├── 1dab5dc1761a30cc_0
+        │   │   ├── 1f5c2b730c0a8865_0
+        │   │   ├── 1f668b62a9866ddf_0
+        │   │   ├── 21ea7f705979094e_0
+        │   │   ├── 228902ad0fd7c2f4_0
+        │   │   ├── 236655d8d00af2b1_0
+        │   │   ├── 243b209db79a5452_0
+        │   │   ├── 28dd20211cee97a2_0
+        │   │   ├── 290f86eaf0d7ab34_0
+        │   │   ├── 2b56b465d0024b66_0
+        │   │   ├── 2b6de007ea87949e_0
+        │   │   ├── 2cae24a3bef2585a_0
+        │   │   ├── 2e6026fb8a06d8c0_0
+        │   │   ├── 3003c51a1ea205dd_0
+        │   │   ├── 34c42a9db58195fd_0
+        │   │   ├── 353e9c634737f04d_0
+        │   │   ├── 35eee21af223ceac_0
+        │   │   ├── 37f281f5fb9faad1_0
+        │   │   ├── 3821db76803971ab_0
+        │   │   ├── 3aa7932bce7d6692_0
+        │   │   ├── 3d8a7aa2533d5912_0
+        │   │   ├── 40c0a671b94b45f0_0
+        │   │   ├── 43ee3df1e2283c6f_0
+        │   │   ├── 45e3efd5f53a50b0_0
+        │   │   ├── 479709bfc0fde5c1_0
+        │   │   ├── 4a7b9940ca0c1187_0
+        │   │   ├── 4ee355d649e05f57_0
+        │   │   ├── 54ac4ea8075b59a5_0
+        │   │   ├── 54ffed6d8772b86a_0
+        │   │   ├── 59d0b85b19ec28fc_0
+        │   │   ├── 5b16111eab07c1bd_0
+        │   │   ├── 5b9ec0c1d7f140e3_0
+        │   │   ├── 5b9f8bc609c011e7_0
+        │   │   ├── 5bfb5c9d10af63f2_0
+        │   │   ├── 5c069d9bbd50189d_0
+        │   │   ├── 5f271cffc4912f90_0
+        │   │   ├── 609023141b778baf_0
+        │   │   ├── 60f6d13d6d9fd35f_0
+        │   │   ├── 6186dd4b6c57781e_0
+        │   │   ├── 63532aca5505af4f_0
+        │   │   ├── 6595798b14033a25_0
+        │   │   ├── 6609b8a2340db99d_0
+        │   │   ├── 667ef251044570f5_0
+        │   │   ├── 66968fdaa12ff31e_0
+        │   │   ├── 6bf0f6d5d1fe8bcd_0
+        │   │   ├── 6d322ef5ada883d7_0
+        │   │   ├── 6f3e598959994ce1_0
+        │   │   ├── 71c51e6f13da99d8_0
+        │   │   ├── 7896d112b2f9019b_0
+        │   │   ├── 7b208abfc546acb1_0
+        │   │   ├── 7e56406a28cc9ae7_0
+        │   │   ├── 8352df685b5cc3a3_0
+        │   │   ├── 838e7915b96328d2_0
+        │   │   ├── 83e448a5d98d29cb_0
+        │   │   ├── 84c403a38b4ed21d_0
+        │   │   ├── 84f2d144eb4bffbd_0
+        │   │   ├── 85c4844f96865303_0
+        │   │   ├── 8643893d92e7f68f_0
+        │   │   ├── 873e269a1406e233_0
+        │   │   ├── 8a35ae2984132388_0
+        │   │   ├── 8d47ef8c2a760205_0
+        │   │   ├── 8ef421d2b9427362_0
+        │   │   ├── 95a4c0042b0ca9ce_0
+        │   │   ├── 9a69b22e829a277d_0
+        │   │   ├── 9a8f35623036fcb6_0
+        │   │   ├── 9a94fd2a3b41ded4_0
+        │   │   ├── 9b76280b7b089191_0
+        │   │   ├── 9b8cc43a7b06cf19_0
+        │   │   ├── 9fa13110a406384b_0
+        │   │   ├── 9fd16a66ddabe605_0
+        │   │   ├── 9fe4e0725b0e929e_0
+        │   │   ├── a048e1de766f8029_0
+        │   │   ├── a566b036808bd303_0
+        │   │   ├── a68dff3170046677_0
+        │   │   ├── a70e90d382dab7f5_0
+        │   │   ├── a970fff4e1c9cf32_0
+        │   │   ├── a9afd6b48c34ceb3_0
+        │   │   ├── ab8f2d61223ffc48_0
+        │   │   ├── adb963e9b7c7b8b6_0
+        │   │   ├── b0673e8304d4273c_0
+        │   │   ├── b085068a80b814d8_0
+        │   │   ├── b0b5a37ae96e358c_0
+        │   │   ├── b1bd06720fd9c85d_0
+        │   │   ├── b332ef50a1f962b0_0
+        │   │   ├── b622428e217968f8_0
+        │   │   ├── b93ff36fe8106e32_0
+        │   │   ├── ba261cb64dfdc44c_0
+        │   │   ├── bd84dd852773c95c_0
+        │   │   ├── bfcfc187f991af2d_0
+        │   │   ├── c00e321fc4621006_0
+        │   │   ├── c1a05e52b944f210_0
+        │   │   ├── c2c259f5bffa8540_0
+        │   │   ├── c68c4477f44fa0f0_0
+        │   │   ├── c84e9773b6d7fb3e_0
+        │   │   ├── cadf1d2517ebd403_0
+        │   │   ├── cd26dbb60e632a69_0
+        │   │   ├── ce930c748b9aa234_0
+        │   │   ├── d39293bba6f61e5b_0
+        │   │   ├── d456687e56ba0055_0
+        │   │   ├── d4a95f7092256a87_0
+        │   │   ├── d66a4992be93a57e_0
+        │   │   ├── da1f01d1b7e1bc90_0
+        │   │   ├── db1643081e558360_0
+        │   │   ├── de430d700f91fd2a_0
+        │   │   ├── df38996c935e5e71_0
+        │   │   ├── e2c3ccd35d4b600d_0
+        │   │   ├── e355a15f69331728_0
+        │   │   ├── e89b9524663fe728_0
+        │   │   ├── ea4307ad77a224ad_0
+        │   │   ├── ec633704b2af9e96_0
+        │   │   ├── ec76d95b503353e6_0
+        │   │   ├── f03e83b55708a62a_0
+        │   │   ├── f52709e7e2a8ac36_0
+        │   │   ├── f615d433e1d9e747_0
+        │   │   ├── f6c553a8c496903f_0
+        │   │   ├── f727663528a62a51_0
+        │   │   ├── f7efff2f10893c92_0
+        │   │   ├── f99bb13e9b788108_0
+        │   │   ├── fbdc73710da38399_0
+        │   │   ├── fec42e59b0678025_0
+        │   │   ├── ff795259f4aa07c7_0
+        │   │   ├── index
+        │   │   ├── index-dir/
+        │   │   │   ... (max depth reached)
+        │   ├── wasm/
+        │   │   └── index
+        │   │   └── index-dir/
+        │   │       ... (max depth reached)
+        ├── commerce_subscription_db/
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        ├── DawnGraphiteCache/
+        │   ├── data_0
+        │   ├── data_1
+        │   ├── data_2
+        │   ├── data_3
+        │   ├── index
+        ├── DawnWebGPUCache/
+        │   ├── data_0
+        │   ├── data_1
+        │   ├── data_2
+        │   ├── data_3
+        │   ├── index
+        ├── DIPS
+        ├── DIPS-shm
+        ├── DIPS-wal
+        ├── discounts_db/
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        ├── Download Service/
+        │   ├── EntryDB/
+        │   │   ├── LOCK
+        │   │   ├── LOG
+        │   │   ├── LOG.old
+        │   ├── Files/
+        ├── Extension Rules/
+        │   ├── 000003.log
+        │   ├── CURRENT
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── MANIFEST-000001
+        ├── Extension Scripts/
+        │   ├── 000003.log
+        │   ├── CURRENT
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── MANIFEST-000001
+        ├── Extension State/
+        │   ├── 000003.log
+        │   ├── CURRENT
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        │   ├── MANIFEST-000001
+        ├── Favicons
+        ├── Favicons-journal
+        ├── Feature Engagement Tracker/
+        │   ├── AvailabilityDB/
+        │   │   ├── LOCK
+        │   │   ├── LOG
+        │   │   ├── LOG.old
+        │   ├── EventDB/
+        │   │   └── LOCK
+        │   │   └── LOG
+        │   │   └── LOG.old
+        ├── GCM Store/
+        │   ├── Encryption/
+        │   │   └── 000003.log
+        │   │   └── CURRENT
+        │   │   └── LOCK
+        │   │   └── LOG
+        │   │   └── LOG.old
+        │   │   └── MANIFEST-000001
+        ├── GPUCache/
+        │   ├── data_0
+        │   ├── data_1
+        │   ├── data_2
+        │   ├── data_3
+        │   ├── index
+        ├── heavy_ad_intervention_opt_out.db
+        ├── heavy_ad_intervention_opt_out.db-journal
+        ├── History
+        ├── History-journal
+        ├── IndexedDB/
+        │   ├── https_www.linkedin.com_0.indexeddb.leveldb/
+        │   │   └── 000003.log
+        │   │   └── CURRENT
+        │   │   └── LOCK
+        │   │   └── LOG
+        │   │   └── LOG.old
+        │   │   └── MANIFEST-000001
+        ├── InterestGroups
+        ├── JumpListIconsRecentClosed/
+        │   ├── 45fef7e2-d6ae-4c34-ace4-1b42c52aff92.tmp
+        ├── Local Storage/
+        │   ├── leveldb/
+        │   │   └── 000003.log
+        │   │   └── CURRENT
+        │   │   └── LOCK
+        │   │   └── LOG
+        │   │   └── LOG.old
+        │   │   └── MANIFEST-000001
+        ├── LOCK
+        ├── LOG
+        ├── LOG.old
+        ├── Login Data
+        ├── Login Data For Account
+        ├── Login Data For Account-journal
+        ├── Login Data-journal
+        ├── MediaDeviceSalts
+        ├── MediaDeviceSalts-journal
+        ├── Network/
+        │   ├── Cookies
+        │   ├── Cookies-journal
+        │   ├── Network Persistent State
+        │   ├── NetworkDataMigrated
+        │   ├── Reporting and NEL
+        │   ├── Reporting and NEL-journal
+        │   ├── SCT Auditing Pending Reports
+        │   ├── TransportSecurity
+        │   ├── Trust Tokens
+        │   ├── Trust Tokens-journal
+        ├── Network Action Predictor
+        ├── Network Action Predictor-journal
+        ├── optimization_guide_hint_cache_store/
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        ├── parcel_tracking_db/
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        ├── passkey_enclave_state
+        ├── PersistentOriginTrials/
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        ├── Preferences
+        ├── PreferredApps
+        ├── README
+        ├── Safe Browsing Network/
+        │   ├── NetworkDataMigrated
+        │   ├── Safe Browsing Cookies
+        │   ├── Safe Browsing Cookies-journal
+        ├── Secure Preferences
+        ├── Segmentation Platform/
+        │   ├── SegmentInfoDB/
+        │   │   ├── LOCK
+        │   │   ├── LOG
+        │   │   ├── LOG.old
+        │   ├── SignalDB/
+        │   │   ├── LOCK
+        │   │   ├── LOG
+        │   │   ├── LOG.old
+        │   ├── SignalStorageConfigDB/
+        │   │   └── LOCK
+        │   │   └── LOG
+        │   │   └── LOG.old
+        ├── Service Worker/
+        │   ├── Database/
+        │   │   ├── 000003.log
+        │   │   ├── CURRENT
+        │   │   ├── LOCK
+        │   │   ├── LOG
+        │   │   ├── LOG.old
+        │   │   ├── MANIFEST-000001
+        │   ├── ScriptCache/
+        │   │   └── 2cc80dabc69f58b6_0
+        │   │   └── 2cc80dabc69f58b6_1
+        │   │   └── 4cb013792b196a35_0
+        │   │   └── 4cb013792b196a35_1
+        │   │   └── index
+        │   │   └── index-dir/
+        │   │       ... (max depth reached)
+        ├── Session Storage/
+        │   ├── 000003.log
+        │   ├── CURRENT
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        │   ├── MANIFEST-000001
+        ├── Sessions/
+        │   ├── Session_13390650390849663
+        │   ├── Session_13390650814693027
+        │   ├── Tabs_13390650380748268
+        │   ├── Tabs_13390650814836663
+        ├── Shared Dictionary/
+        │   ├── cache/
+        │   │   ├── index
+        │   │   ├── index-dir/
+        │   │   │   ... (max depth reached)
+        │   ├── db
+        │   ├── db-journal
+        ├── SharedStorage
+        ├── SharedStorage-wal
+        ├── shared_proto_db/
+        │   ├── 000003.log
+        │   ├── CURRENT
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        │   ├── MANIFEST-000001
+        │   ├── metadata/
+        │   │   └── 000003.log
+        │   │   └── CURRENT
+        │   │   └── LOCK
+        │   │   └── LOG
+        │   │   └── LOG.old
+        │   │   └── MANIFEST-000001
+        ├── Shortcuts
+        ├── Shortcuts-journal
+        ├── Site Characteristics Database/
+        │   ├── 000003.log
+        │   ├── CURRENT
+        │   ├── LOCK
+        │   ├── LOG
+        │   ├── LOG.old
+        │   ├── MANIFEST-000001
+        ├── Sync Data/
+        │   ├── LevelDB/
+        │   │   └── 000003.log
+        │   │   └── CURRENT
+        │   │   └── LOCK
+        │   │   └── LOG
+        │   │   └── LOG.old
+        │   │   └── MANIFEST-000001
+        ├── Top Sites
+        ├── Top Sites-journal
+        ├── trusted_vault.pb
+        ├── Web Data
+        ├── Web Data-journal
+        ├── WebStorage/
+        │   └── QuotaManager
+        │   └── QuotaManager-journal
+    └── extensions_crx_cache/
+        ├── metadata.json
+    └── first_party_sets.db
+    └── first_party_sets.db-journal
+    └── GraphiteDawnCache/
+        ├── data_0
+        ├── data_1
+        ├── data_2
+        ├── data_3
+        ├── index
+    └── GrShaderCache/
+        ├── data_0
+        ├── data_1
+        ├── data_2
+        ├── data_3
+        ├── f_000001
+        ├── f_000002
+        ├── f_000003
+        ├── f_000004
+        ├── f_000005
+        ├── f_000006
+        ├── f_000007
+        ├── f_000008
+        ├── f_000009
+        ├── f_00000a
+        ├── f_00000b
+        ├── f_00000c
+        ├── f_00000d
+        ├── f_00000e
+        ├── f_00000f
+        ├── f_000010
+        ├── f_000011
+        ├── f_000012
+        ├── f_000013
+        ├── index
+    └── Last Browser
+    └── Last Version
+    └── Local State
+    └── Safe Browsing/
+    └── segmentation_platform/
+        ├── ukm_db
+        ├── ukm_db-wal
+    └── ShaderCache/
+        ├── data_0
+        ├── data_1
+        ├── data_2
+        ├── data_3
+        ├── index
+    └── Variations

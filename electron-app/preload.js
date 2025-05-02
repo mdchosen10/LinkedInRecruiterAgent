@@ -8,13 +8,14 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('api', {
   // Authentication
   login: (credentials) => ipcRenderer.invoke('auth:login', credentials),  // Changed this line
+  connectToLinkedIn: (data) => ipcRenderer.invoke('connectToLinkedIn', data),
   logout: () => ipcRenderer.invoke('auth:logout'),
   
+
   // LinkedIn
   loginToLinkedIn: (credentials) => ipcRenderer.invoke('linkedin:login', credentials),
-  searchLinkedIn: (criteria) => ipcRenderer.invoke('linkedin:search', criteria),
-  getProfileDetails: (profileUrl) => ipcRenderer.invoke('linkedin:getProfile', profileUrl),
-  
+  connectToLinkedIn: (data) => ipcRenderer.invoke('connectToLinkedIn', data),
+    
   // Candidates
   getCandidates: (options) => ipcRenderer.invoke('candidates:getAll', options),
   getCandidateDetails: (id) => ipcRenderer.invoke('candidates:getDetails', id),

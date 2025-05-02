@@ -1,0 +1,643 @@
+path,type,level
+".git","directory (skipped)",0
+".gitignore","file",0
+"config","directory",0
+"config\default.js","file",1
+"config\test.js","file",1
+"data","directory",0
+"data\backups","directory",1
+"data\linkedin-recruiter.db","file",1
+"data\linkedin_recruiter.db","file",1
+"data\test_backups","directory",1
+"downloads","directory",0
+"electron-app","directory",0
+"electron-app\preload.js","file",1
+"fix-database.js","file",0
+"index.js","file",0
+"integration","directory",0
+"integration\api-gateway.js","file",1
+"integration\workflow-manager.js","file",1
+"integration-test.js","file",0
+"ipc-handlers.js","file",0
+"linkedin-home.png","file",0
+"modules","directory",0
+"modules\data-storage","directory",1
+"modules\data-storage\data-storage.js","file",2
+"modules\evaluation-engine","directory",1
+"modules\evaluation-engine\candidate-evaluation-engine.js","file",2
+"modules\evaluation-engine\examples","directory",2
+"modules\evaluation-engine\examples\usage-example.js","file",3
+"modules\evaluation-engine\package.json","file",2
+"modules\evaluation-engine\prompts","directory",2
+"modules\evaluation-engine\prompts\evaluation-prompt.yaml","file",3
+"modules\evaluation-engine\prompts\experience-prompt.yaml","file",3
+"modules\evaluation-engine\prompts\technical-prompt.yaml","file",3
+"modules\evaluation-engine\README.md","file",2
+"modules\evaluation-engine\test","directory",2
+"modules\evaluation-engine\test\candidate-evaluation-engine-test.js","file",3
+"modules\linkedin-automation","directory",1
+"modules\linkedin-automation\electron-integration.js","file",2
+"modules\linkedin-automation\linkedin-automation.js","file",2
+"modules\linkedin-automation\package.json","file",2
+"modules\linkedin-automation\README.md","file",2
+"modules\linkedin-automation\src","directory",2
+"modules\linkedin-automation\src\preload.js","file",3
+"modules\linkedin-automation\src\usage-examples.js","file",3
+"modules\linkedin-automation\ui","directory",2
+"modules\linkedin-automation\ui\index.html","file",3
+"modules\message-generator","directory",1
+"modules\message-generator\default-templates","directory",2
+"modules\message-generator\default-templates\application_received.hbs","file",3
+"modules\message-generator\default-templates\follow_up_after_interview.hbs","file",3
+"modules\message-generator\default-templates\interview_invitation_senior.hbs","file",3
+"modules\message-generator\default-templates\interview_invitation_standard.hbs","file",3
+"modules\message-generator\default-templates\interview_invitation_technical.hbs","file",3
+"modules\message-generator\default-templates\offer_announcement.hbs","file",3
+"modules\message-generator\default-templates\rejection_after_interview.hbs","file",3
+"modules\message-generator\default-templates\rejection_standard.hbs","file",3
+"modules\message-generator\default-templates\video_interview_request.hbs","file",3
+"modules\message-generator\default-templates.js","file",2
+"modules\message-generator\example-usage.js","file",2
+"modules\message-generator\index.js","file",2
+"modules\message-generator\integration-module.js","file",2
+"modules\message-generator\message-generator-api.js","file",2
+"modules\message-generator\message-generator.js","file",2
+"modules\message-generator\package.json","file",2
+"modules\message-generator\README.md","file",2
+"modules\message-generator\routes","directory",2
+"modules\message-generator\routes\setup.js","file",3
+"modules\message-generator\templates","directory",2
+"modules\message-generator\tests","directory",2
+"modules\message-generator\tests\message-generator-test.js","file",3
+"modules\ui","directory",1
+"modules\ui\Architecture.md","file",2
+"modules\ui\desktop.ini","file",2
+"modules\ui\electron","directory",2
+"modules\ui\electron\main.js","file",3
+"modules\ui\electron\preload.js","file",3
+"modules\ui\index.html","file",2
+"modules\ui\package.json","file",2
+"modules\ui\public","directory",2
+"modules\ui\public\index.html","file",3
+"modules\ui\public\index.txt","file",3
+"modules\ui\README.md","file",2
+"modules\ui\src","directory",2
+"modules\ui\src\assets","directory",3
+"modules\ui\src\assets\styles","directory",4
+"modules\ui\src\components","directory",3
+"modules\ui\src\components\candidates","directory",4
+"modules\ui\src\components\common","directory",4
+"modules\ui\src\components\messaging","directory",4
+"modules\ui\src\components\settings","directory",4
+"modules\ui\src\contexts","directory",3
+"modules\ui\src\contexts\auth-context.js","file",4
+"modules\ui\src\contexts\data-context.js","file",4
+"modules\ui\src\index.js","file",3
+"modules\ui\src\pages","directory",3
+"modules\ui\src\pages\candidate-profile-page.js","file",4
+"modules\ui\src\pages\candidates-page.js","file",4
+"modules\ui\src\pages\dashboard-page.js","file",4
+"modules\ui\src\pages\login-page.js","file",4
+"modules\ui\src\pages\messaging-page.js","file",4
+"modules\ui\src\pages\settings-page.js","file",4
+"modules\ui\src\services","directory",3
+"modules\ui\src\services\sample-data.js","file",4
+"modules\ui\tailwind.config","file",2
+"node_modules","directory (skipped)",0
+"package-lock.json","file",0
+"package.json","file",0
+"print-structure.js","file",0
+"project-structure-check.js","file",0
+"setup.js","file",0
+"user_data","directory",0
+"user_data\BrowserMetrics","directory",1
+"user_data\BrowserMetrics\BrowserMetrics-68148CBC-1E8C.pma","file",2
+"user_data\BrowserMetrics-spare.pma","file",1
+"user_data\component_crx_cache","directory",1
+"user_data\component_crx_cache\metadata.json","file",2
+"user_data\Crashpad","directory",1
+"user_data\Crashpad\attachments","directory",2
+"user_data\Crashpad\metadata","file",2
+"user_data\Crashpad\reports","directory",2
+"user_data\Crashpad\settings.dat","file",2
+"user_data\Default","directory",1
+"user_data\Default\Account Web Data","file",2
+"user_data\Default\Account Web Data-journal","file",2
+"user_data\Default\Affiliation Database","file",2
+"user_data\Default\Affiliation Database-journal","file",2
+"user_data\Default\AutofillStrikeDatabase","directory",2
+"user_data\Default\AutofillStrikeDatabase\LOCK","file",3
+"user_data\Default\AutofillStrikeDatabase\LOG","file",3
+"user_data\Default\AutofillStrikeDatabase\LOG.old","file",3
+"user_data\Default\blob_storage","directory",2
+"user_data\Default\blob_storage\e8ac4702-b7b5-411a-88a6-ed4c9531cfb1","directory",3
+"user_data\Default\BrowsingTopicsSiteData","file",2
+"user_data\Default\BrowsingTopicsSiteData-journal","file",2
+"user_data\Default\BrowsingTopicsState","file",2
+"user_data\Default\BudgetDatabase","directory",2
+"user_data\Default\BudgetDatabase\LOCK","file",3
+"user_data\Default\BudgetDatabase\LOG","file",3
+"user_data\Default\BudgetDatabase\LOG.old","file",3
+"user_data\Default\Cache","directory",2
+"user_data\Default\Cache\Cache_Data","directory",3
+"user_data\Default\Cache\Cache_Data\data_0","file",4
+"user_data\Default\Cache\Cache_Data\data_1","file",4
+"user_data\Default\Cache\Cache_Data\data_2","file",4
+"user_data\Default\Cache\Cache_Data\data_3","file",4
+"user_data\Default\Cache\Cache_Data\f_000001","file",4
+"user_data\Default\Cache\Cache_Data\f_000002","file",4
+"user_data\Default\Cache\Cache_Data\f_000003","file",4
+"user_data\Default\Cache\Cache_Data\f_000004","file",4
+"user_data\Default\Cache\Cache_Data\f_000005","file",4
+"user_data\Default\Cache\Cache_Data\f_000006","file",4
+"user_data\Default\Cache\Cache_Data\f_000007","file",4
+"user_data\Default\Cache\Cache_Data\f_000009","file",4
+"user_data\Default\Cache\Cache_Data\f_00000a","file",4
+"user_data\Default\Cache\Cache_Data\f_00000b","file",4
+"user_data\Default\Cache\Cache_Data\f_00000c","file",4
+"user_data\Default\Cache\Cache_Data\f_00000d","file",4
+"user_data\Default\Cache\Cache_Data\f_00000e","file",4
+"user_data\Default\Cache\Cache_Data\f_00000f","file",4
+"user_data\Default\Cache\Cache_Data\f_000010","file",4
+"user_data\Default\Cache\Cache_Data\f_000011","file",4
+"user_data\Default\Cache\Cache_Data\f_000012","file",4
+"user_data\Default\Cache\Cache_Data\f_000013","file",4
+"user_data\Default\Cache\Cache_Data\f_000014","file",4
+"user_data\Default\Cache\Cache_Data\f_000015","file",4
+"user_data\Default\Cache\Cache_Data\f_000016","file",4
+"user_data\Default\Cache\Cache_Data\f_000017","file",4
+"user_data\Default\Cache\Cache_Data\f_000018","file",4
+"user_data\Default\Cache\Cache_Data\f_000019","file",4
+"user_data\Default\Cache\Cache_Data\f_00001a","file",4
+"user_data\Default\Cache\Cache_Data\f_00001b","file",4
+"user_data\Default\Cache\Cache_Data\f_00001c","file",4
+"user_data\Default\Cache\Cache_Data\f_00001d","file",4
+"user_data\Default\Cache\Cache_Data\f_00001e","file",4
+"user_data\Default\Cache\Cache_Data\f_00001f","file",4
+"user_data\Default\Cache\Cache_Data\f_000020","file",4
+"user_data\Default\Cache\Cache_Data\f_000021","file",4
+"user_data\Default\Cache\Cache_Data\f_000022","file",4
+"user_data\Default\Cache\Cache_Data\f_000023","file",4
+"user_data\Default\Cache\Cache_Data\f_000024","file",4
+"user_data\Default\Cache\Cache_Data\f_000026","file",4
+"user_data\Default\Cache\Cache_Data\f_000027","file",4
+"user_data\Default\Cache\Cache_Data\f_000028","file",4
+"user_data\Default\Cache\Cache_Data\f_000029","file",4
+"user_data\Default\Cache\Cache_Data\f_00002a","file",4
+"user_data\Default\Cache\Cache_Data\f_00002b","file",4
+"user_data\Default\Cache\Cache_Data\f_00002c","file",4
+"user_data\Default\Cache\Cache_Data\f_00002d","file",4
+"user_data\Default\Cache\Cache_Data\f_00002e","file",4
+"user_data\Default\Cache\Cache_Data\f_00002f","file",4
+"user_data\Default\Cache\Cache_Data\f_000030","file",4
+"user_data\Default\Cache\Cache_Data\f_000032","file",4
+"user_data\Default\Cache\Cache_Data\f_000033","file",4
+"user_data\Default\Cache\Cache_Data\f_000034","file",4
+"user_data\Default\Cache\Cache_Data\f_000035","file",4
+"user_data\Default\Cache\Cache_Data\f_000036","file",4
+"user_data\Default\Cache\Cache_Data\f_000037","file",4
+"user_data\Default\Cache\Cache_Data\f_000038","file",4
+"user_data\Default\Cache\Cache_Data\f_000039","file",4
+"user_data\Default\Cache\Cache_Data\f_00003a","file",4
+"user_data\Default\Cache\Cache_Data\f_00003b","file",4
+"user_data\Default\Cache\Cache_Data\f_00003c","file",4
+"user_data\Default\Cache\Cache_Data\f_00003d","file",4
+"user_data\Default\Cache\Cache_Data\f_00003e","file",4
+"user_data\Default\Cache\Cache_Data\f_00003f","file",4
+"user_data\Default\Cache\Cache_Data\f_000040","file",4
+"user_data\Default\Cache\Cache_Data\f_000041","file",4
+"user_data\Default\Cache\Cache_Data\f_000042","file",4
+"user_data\Default\Cache\Cache_Data\f_000043","file",4
+"user_data\Default\Cache\Cache_Data\f_000044","file",4
+"user_data\Default\Cache\Cache_Data\f_000045","file",4
+"user_data\Default\Cache\Cache_Data\f_000046","file",4
+"user_data\Default\Cache\Cache_Data\f_000047","file",4
+"user_data\Default\Cache\Cache_Data\index","file",4
+"user_data\Default\chrome_cart_db","directory",2
+"user_data\Default\chrome_cart_db\LOCK","file",3
+"user_data\Default\chrome_cart_db\LOG","file",3
+"user_data\Default\chrome_cart_db\LOG.old","file",3
+"user_data\Default\ClientCertificates","directory",2
+"user_data\Default\ClientCertificates\LOCK","file",3
+"user_data\Default\ClientCertificates\LOG","file",3
+"user_data\Default\ClientCertificates\LOG.old","file",3
+"user_data\Default\Code Cache","directory",2
+"user_data\Default\Code Cache\js","directory",3
+"user_data\Default\Code Cache\js\004518949d2869b5_0","file",4
+"user_data\Default\Code Cache\js\027886c01faa52e5_0","file",4
+"user_data\Default\Code Cache\js\03c6223960f5a2b3_0","file",4
+"user_data\Default\Code Cache\js\04d43a092598d387_0","file",4
+"user_data\Default\Code Cache\js\0697410bec72d08d_0","file",4
+"user_data\Default\Code Cache\js\07798e95d1a0d836_0","file",4
+"user_data\Default\Code Cache\js\093f948b0368e8b5_0","file",4
+"user_data\Default\Code Cache\js\0a7d48c18ee02f79_0","file",4
+"user_data\Default\Code Cache\js\0c6f6dfe76c22223_0","file",4
+"user_data\Default\Code Cache\js\0c73ba78a052ca7b_0","file",4
+"user_data\Default\Code Cache\js\0f7887b16e8a6079_0","file",4
+"user_data\Default\Code Cache\js\1008cee5c86b3d8f_0","file",4
+"user_data\Default\Code Cache\js\11670333fb4c949b_0","file",4
+"user_data\Default\Code Cache\js\14887e1cd0de54e0_0","file",4
+"user_data\Default\Code Cache\js\17f658f960ce93c2_0","file",4
+"user_data\Default\Code Cache\js\1c83a0d04ac8c9af_0","file",4
+"user_data\Default\Code Cache\js\1d59026a02fc5594_0","file",4
+"user_data\Default\Code Cache\js\1dab5dc1761a30cc_0","file",4
+"user_data\Default\Code Cache\js\1f5c2b730c0a8865_0","file",4
+"user_data\Default\Code Cache\js\1f668b62a9866ddf_0","file",4
+"user_data\Default\Code Cache\js\21ea7f705979094e_0","file",4
+"user_data\Default\Code Cache\js\228902ad0fd7c2f4_0","file",4
+"user_data\Default\Code Cache\js\236655d8d00af2b1_0","file",4
+"user_data\Default\Code Cache\js\243b209db79a5452_0","file",4
+"user_data\Default\Code Cache\js\28dd20211cee97a2_0","file",4
+"user_data\Default\Code Cache\js\290f86eaf0d7ab34_0","file",4
+"user_data\Default\Code Cache\js\2b56b465d0024b66_0","file",4
+"user_data\Default\Code Cache\js\2b6de007ea87949e_0","file",4
+"user_data\Default\Code Cache\js\2cae24a3bef2585a_0","file",4
+"user_data\Default\Code Cache\js\2e6026fb8a06d8c0_0","file",4
+"user_data\Default\Code Cache\js\3003c51a1ea205dd_0","file",4
+"user_data\Default\Code Cache\js\34c42a9db58195fd_0","file",4
+"user_data\Default\Code Cache\js\353e9c634737f04d_0","file",4
+"user_data\Default\Code Cache\js\35eee21af223ceac_0","file",4
+"user_data\Default\Code Cache\js\37f281f5fb9faad1_0","file",4
+"user_data\Default\Code Cache\js\3821db76803971ab_0","file",4
+"user_data\Default\Code Cache\js\3aa7932bce7d6692_0","file",4
+"user_data\Default\Code Cache\js\3d8a7aa2533d5912_0","file",4
+"user_data\Default\Code Cache\js\40c0a671b94b45f0_0","file",4
+"user_data\Default\Code Cache\js\43ee3df1e2283c6f_0","file",4
+"user_data\Default\Code Cache\js\45e3efd5f53a50b0_0","file",4
+"user_data\Default\Code Cache\js\479709bfc0fde5c1_0","file",4
+"user_data\Default\Code Cache\js\4a7b9940ca0c1187_0","file",4
+"user_data\Default\Code Cache\js\4ee355d649e05f57_0","file",4
+"user_data\Default\Code Cache\js\54ac4ea8075b59a5_0","file",4
+"user_data\Default\Code Cache\js\54ffed6d8772b86a_0","file",4
+"user_data\Default\Code Cache\js\59d0b85b19ec28fc_0","file",4
+"user_data\Default\Code Cache\js\5b16111eab07c1bd_0","file",4
+"user_data\Default\Code Cache\js\5b9ec0c1d7f140e3_0","file",4
+"user_data\Default\Code Cache\js\5b9f8bc609c011e7_0","file",4
+"user_data\Default\Code Cache\js\5bfb5c9d10af63f2_0","file",4
+"user_data\Default\Code Cache\js\5c069d9bbd50189d_0","file",4
+"user_data\Default\Code Cache\js\5f271cffc4912f90_0","file",4
+"user_data\Default\Code Cache\js\609023141b778baf_0","file",4
+"user_data\Default\Code Cache\js\60f6d13d6d9fd35f_0","file",4
+"user_data\Default\Code Cache\js\6186dd4b6c57781e_0","file",4
+"user_data\Default\Code Cache\js\63532aca5505af4f_0","file",4
+"user_data\Default\Code Cache\js\6595798b14033a25_0","file",4
+"user_data\Default\Code Cache\js\6609b8a2340db99d_0","file",4
+"user_data\Default\Code Cache\js\667ef251044570f5_0","file",4
+"user_data\Default\Code Cache\js\66968fdaa12ff31e_0","file",4
+"user_data\Default\Code Cache\js\6bf0f6d5d1fe8bcd_0","file",4
+"user_data\Default\Code Cache\js\6d322ef5ada883d7_0","file",4
+"user_data\Default\Code Cache\js\6f3e598959994ce1_0","file",4
+"user_data\Default\Code Cache\js\71c51e6f13da99d8_0","file",4
+"user_data\Default\Code Cache\js\7896d112b2f9019b_0","file",4
+"user_data\Default\Code Cache\js\7b208abfc546acb1_0","file",4
+"user_data\Default\Code Cache\js\7e56406a28cc9ae7_0","file",4
+"user_data\Default\Code Cache\js\8352df685b5cc3a3_0","file",4
+"user_data\Default\Code Cache\js\838e7915b96328d2_0","file",4
+"user_data\Default\Code Cache\js\83e448a5d98d29cb_0","file",4
+"user_data\Default\Code Cache\js\84c403a38b4ed21d_0","file",4
+"user_data\Default\Code Cache\js\84f2d144eb4bffbd_0","file",4
+"user_data\Default\Code Cache\js\85c4844f96865303_0","file",4
+"user_data\Default\Code Cache\js\8643893d92e7f68f_0","file",4
+"user_data\Default\Code Cache\js\873e269a1406e233_0","file",4
+"user_data\Default\Code Cache\js\8a35ae2984132388_0","file",4
+"user_data\Default\Code Cache\js\8d47ef8c2a760205_0","file",4
+"user_data\Default\Code Cache\js\8ef421d2b9427362_0","file",4
+"user_data\Default\Code Cache\js\95a4c0042b0ca9ce_0","file",4
+"user_data\Default\Code Cache\js\9a69b22e829a277d_0","file",4
+"user_data\Default\Code Cache\js\9a8f35623036fcb6_0","file",4
+"user_data\Default\Code Cache\js\9a94fd2a3b41ded4_0","file",4
+"user_data\Default\Code Cache\js\9b76280b7b089191_0","file",4
+"user_data\Default\Code Cache\js\9b8cc43a7b06cf19_0","file",4
+"user_data\Default\Code Cache\js\9fa13110a406384b_0","file",4
+"user_data\Default\Code Cache\js\9fd16a66ddabe605_0","file",4
+"user_data\Default\Code Cache\js\9fe4e0725b0e929e_0","file",4
+"user_data\Default\Code Cache\js\a048e1de766f8029_0","file",4
+"user_data\Default\Code Cache\js\a566b036808bd303_0","file",4
+"user_data\Default\Code Cache\js\a68dff3170046677_0","file",4
+"user_data\Default\Code Cache\js\a70e90d382dab7f5_0","file",4
+"user_data\Default\Code Cache\js\a970fff4e1c9cf32_0","file",4
+"user_data\Default\Code Cache\js\a9afd6b48c34ceb3_0","file",4
+"user_data\Default\Code Cache\js\ab8f2d61223ffc48_0","file",4
+"user_data\Default\Code Cache\js\adb963e9b7c7b8b6_0","file",4
+"user_data\Default\Code Cache\js\b0673e8304d4273c_0","file",4
+"user_data\Default\Code Cache\js\b085068a80b814d8_0","file",4
+"user_data\Default\Code Cache\js\b0b5a37ae96e358c_0","file",4
+"user_data\Default\Code Cache\js\b1bd06720fd9c85d_0","file",4
+"user_data\Default\Code Cache\js\b332ef50a1f962b0_0","file",4
+"user_data\Default\Code Cache\js\b622428e217968f8_0","file",4
+"user_data\Default\Code Cache\js\b93ff36fe8106e32_0","file",4
+"user_data\Default\Code Cache\js\ba261cb64dfdc44c_0","file",4
+"user_data\Default\Code Cache\js\bd84dd852773c95c_0","file",4
+"user_data\Default\Code Cache\js\bfcfc187f991af2d_0","file",4
+"user_data\Default\Code Cache\js\c00e321fc4621006_0","file",4
+"user_data\Default\Code Cache\js\c1a05e52b944f210_0","file",4
+"user_data\Default\Code Cache\js\c2c259f5bffa8540_0","file",4
+"user_data\Default\Code Cache\js\c68c4477f44fa0f0_0","file",4
+"user_data\Default\Code Cache\js\c84e9773b6d7fb3e_0","file",4
+"user_data\Default\Code Cache\js\cadf1d2517ebd403_0","file",4
+"user_data\Default\Code Cache\js\cd26dbb60e632a69_0","file",4
+"user_data\Default\Code Cache\js\ce930c748b9aa234_0","file",4
+"user_data\Default\Code Cache\js\d39293bba6f61e5b_0","file",4
+"user_data\Default\Code Cache\js\d456687e56ba0055_0","file",4
+"user_data\Default\Code Cache\js\d4a95f7092256a87_0","file",4
+"user_data\Default\Code Cache\js\d66a4992be93a57e_0","file",4
+"user_data\Default\Code Cache\js\da1f01d1b7e1bc90_0","file",4
+"user_data\Default\Code Cache\js\db1643081e558360_0","file",4
+"user_data\Default\Code Cache\js\de430d700f91fd2a_0","file",4
+"user_data\Default\Code Cache\js\df38996c935e5e71_0","file",4
+"user_data\Default\Code Cache\js\e2c3ccd35d4b600d_0","file",4
+"user_data\Default\Code Cache\js\e355a15f69331728_0","file",4
+"user_data\Default\Code Cache\js\e89b9524663fe728_0","file",4
+"user_data\Default\Code Cache\js\ea4307ad77a224ad_0","file",4
+"user_data\Default\Code Cache\js\ec633704b2af9e96_0","file",4
+"user_data\Default\Code Cache\js\ec76d95b503353e6_0","file",4
+"user_data\Default\Code Cache\js\f03e83b55708a62a_0","file",4
+"user_data\Default\Code Cache\js\f52709e7e2a8ac36_0","file",4
+"user_data\Default\Code Cache\js\f615d433e1d9e747_0","file",4
+"user_data\Default\Code Cache\js\f6c553a8c496903f_0","file",4
+"user_data\Default\Code Cache\js\f727663528a62a51_0","file",4
+"user_data\Default\Code Cache\js\f7efff2f10893c92_0","file",4
+"user_data\Default\Code Cache\js\f99bb13e9b788108_0","file",4
+"user_data\Default\Code Cache\js\fbdc73710da38399_0","file",4
+"user_data\Default\Code Cache\js\fec42e59b0678025_0","file",4
+"user_data\Default\Code Cache\js\ff795259f4aa07c7_0","file",4
+"user_data\Default\Code Cache\js\index","file",4
+"user_data\Default\Code Cache\js\index-dir","directory",4
+"user_data\Default\Code Cache\wasm","directory",3
+"user_data\Default\Code Cache\wasm\index","file",4
+"user_data\Default\Code Cache\wasm\index-dir","directory",4
+"user_data\Default\commerce_subscription_db","directory",2
+"user_data\Default\commerce_subscription_db\LOCK","file",3
+"user_data\Default\commerce_subscription_db\LOG","file",3
+"user_data\Default\commerce_subscription_db\LOG.old","file",3
+"user_data\Default\DawnGraphiteCache","directory",2
+"user_data\Default\DawnGraphiteCache\data_0","file",3
+"user_data\Default\DawnGraphiteCache\data_1","file",3
+"user_data\Default\DawnGraphiteCache\data_2","file",3
+"user_data\Default\DawnGraphiteCache\data_3","file",3
+"user_data\Default\DawnGraphiteCache\index","file",3
+"user_data\Default\DawnWebGPUCache","directory",2
+"user_data\Default\DawnWebGPUCache\data_0","file",3
+"user_data\Default\DawnWebGPUCache\data_1","file",3
+"user_data\Default\DawnWebGPUCache\data_2","file",3
+"user_data\Default\DawnWebGPUCache\data_3","file",3
+"user_data\Default\DawnWebGPUCache\index","file",3
+"user_data\Default\DIPS","file",2
+"user_data\Default\DIPS-shm","file",2
+"user_data\Default\DIPS-wal","file",2
+"user_data\Default\discounts_db","directory",2
+"user_data\Default\discounts_db\LOCK","file",3
+"user_data\Default\discounts_db\LOG","file",3
+"user_data\Default\discounts_db\LOG.old","file",3
+"user_data\Default\Download Service","directory",2
+"user_data\Default\Download Service\EntryDB","directory",3
+"user_data\Default\Download Service\EntryDB\LOCK","file",4
+"user_data\Default\Download Service\EntryDB\LOG","file",4
+"user_data\Default\Download Service\EntryDB\LOG.old","file",4
+"user_data\Default\Download Service\Files","directory",3
+"user_data\Default\Extension Rules","directory",2
+"user_data\Default\Extension Rules\000003.log","file",3
+"user_data\Default\Extension Rules\CURRENT","file",3
+"user_data\Default\Extension Rules\LOCK","file",3
+"user_data\Default\Extension Rules\LOG","file",3
+"user_data\Default\Extension Rules\MANIFEST-000001","file",3
+"user_data\Default\Extension Scripts","directory",2
+"user_data\Default\Extension Scripts\000003.log","file",3
+"user_data\Default\Extension Scripts\CURRENT","file",3
+"user_data\Default\Extension Scripts\LOCK","file",3
+"user_data\Default\Extension Scripts\LOG","file",3
+"user_data\Default\Extension Scripts\MANIFEST-000001","file",3
+"user_data\Default\Extension State","directory",2
+"user_data\Default\Extension State\000003.log","file",3
+"user_data\Default\Extension State\CURRENT","file",3
+"user_data\Default\Extension State\LOCK","file",3
+"user_data\Default\Extension State\LOG","file",3
+"user_data\Default\Extension State\LOG.old","file",3
+"user_data\Default\Extension State\MANIFEST-000001","file",3
+"user_data\Default\Favicons","file",2
+"user_data\Default\Favicons-journal","file",2
+"user_data\Default\Feature Engagement Tracker","directory",2
+"user_data\Default\Feature Engagement Tracker\AvailabilityDB","directory",3
+"user_data\Default\Feature Engagement Tracker\AvailabilityDB\LOCK","file",4
+"user_data\Default\Feature Engagement Tracker\AvailabilityDB\LOG","file",4
+"user_data\Default\Feature Engagement Tracker\AvailabilityDB\LOG.old","file",4
+"user_data\Default\Feature Engagement Tracker\EventDB","directory",3
+"user_data\Default\Feature Engagement Tracker\EventDB\LOCK","file",4
+"user_data\Default\Feature Engagement Tracker\EventDB\LOG","file",4
+"user_data\Default\Feature Engagement Tracker\EventDB\LOG.old","file",4
+"user_data\Default\GCM Store","directory",2
+"user_data\Default\GCM Store\Encryption","directory",3
+"user_data\Default\GCM Store\Encryption\000003.log","file",4
+"user_data\Default\GCM Store\Encryption\CURRENT","file",4
+"user_data\Default\GCM Store\Encryption\LOCK","file",4
+"user_data\Default\GCM Store\Encryption\LOG","file",4
+"user_data\Default\GCM Store\Encryption\LOG.old","file",4
+"user_data\Default\GCM Store\Encryption\MANIFEST-000001","file",4
+"user_data\Default\GPUCache","directory",2
+"user_data\Default\GPUCache\data_0","file",3
+"user_data\Default\GPUCache\data_1","file",3
+"user_data\Default\GPUCache\data_2","file",3
+"user_data\Default\GPUCache\data_3","file",3
+"user_data\Default\GPUCache\index","file",3
+"user_data\Default\heavy_ad_intervention_opt_out.db","file",2
+"user_data\Default\heavy_ad_intervention_opt_out.db-journal","file",2
+"user_data\Default\History","file",2
+"user_data\Default\History-journal","file",2
+"user_data\Default\IndexedDB","directory",2
+"user_data\Default\IndexedDB\https_www.linkedin.com_0.indexeddb.leveldb","directory",3
+"user_data\Default\IndexedDB\https_www.linkedin.com_0.indexeddb.leveldb\000003.log","file",4
+"user_data\Default\IndexedDB\https_www.linkedin.com_0.indexeddb.leveldb\CURRENT","file",4
+"user_data\Default\IndexedDB\https_www.linkedin.com_0.indexeddb.leveldb\LOCK","file",4
+"user_data\Default\IndexedDB\https_www.linkedin.com_0.indexeddb.leveldb\LOG","file",4
+"user_data\Default\IndexedDB\https_www.linkedin.com_0.indexeddb.leveldb\LOG.old","file",4
+"user_data\Default\IndexedDB\https_www.linkedin.com_0.indexeddb.leveldb\MANIFEST-000001","file",4
+"user_data\Default\InterestGroups","file",2
+"user_data\Default\JumpListIconsRecentClosed","directory",2
+"user_data\Default\JumpListIconsRecentClosed\45fef7e2-d6ae-4c34-ace4-1b42c52aff92.tmp","file",3
+"user_data\Default\Local Storage","directory",2
+"user_data\Default\Local Storage\leveldb","directory",3
+"user_data\Default\Local Storage\leveldb\000003.log","file",4
+"user_data\Default\Local Storage\leveldb\CURRENT","file",4
+"user_data\Default\Local Storage\leveldb\LOCK","file",4
+"user_data\Default\Local Storage\leveldb\LOG","file",4
+"user_data\Default\Local Storage\leveldb\LOG.old","file",4
+"user_data\Default\Local Storage\leveldb\MANIFEST-000001","file",4
+"user_data\Default\LOCK","file",2
+"user_data\Default\LOG","file",2
+"user_data\Default\LOG.old","file",2
+"user_data\Default\Login Data","file",2
+"user_data\Default\Login Data For Account","file",2
+"user_data\Default\Login Data For Account-journal","file",2
+"user_data\Default\Login Data-journal","file",2
+"user_data\Default\MediaDeviceSalts","file",2
+"user_data\Default\MediaDeviceSalts-journal","file",2
+"user_data\Default\Network","directory",2
+"user_data\Default\Network\Cookies","file",3
+"user_data\Default\Network\Cookies-journal","file",3
+"user_data\Default\Network\Network Persistent State","file",3
+"user_data\Default\Network\NetworkDataMigrated","file",3
+"user_data\Default\Network\Reporting and NEL","file",3
+"user_data\Default\Network\Reporting and NEL-journal","file",3
+"user_data\Default\Network\SCT Auditing Pending Reports","file",3
+"user_data\Default\Network\TransportSecurity","file",3
+"user_data\Default\Network\Trust Tokens","file",3
+"user_data\Default\Network\Trust Tokens-journal","file",3
+"user_data\Default\Network Action Predictor","file",2
+"user_data\Default\Network Action Predictor-journal","file",2
+"user_data\Default\optimization_guide_hint_cache_store","directory",2
+"user_data\Default\optimization_guide_hint_cache_store\LOCK","file",3
+"user_data\Default\optimization_guide_hint_cache_store\LOG","file",3
+"user_data\Default\optimization_guide_hint_cache_store\LOG.old","file",3
+"user_data\Default\parcel_tracking_db","directory",2
+"user_data\Default\parcel_tracking_db\LOCK","file",3
+"user_data\Default\parcel_tracking_db\LOG","file",3
+"user_data\Default\parcel_tracking_db\LOG.old","file",3
+"user_data\Default\passkey_enclave_state","file",2
+"user_data\Default\PersistentOriginTrials","directory",2
+"user_data\Default\PersistentOriginTrials\LOCK","file",3
+"user_data\Default\PersistentOriginTrials\LOG","file",3
+"user_data\Default\PersistentOriginTrials\LOG.old","file",3
+"user_data\Default\Preferences","file",2
+"user_data\Default\PreferredApps","file",2
+"user_data\Default\README","file",2
+"user_data\Default\Safe Browsing Network","directory",2
+"user_data\Default\Safe Browsing Network\NetworkDataMigrated","file",3
+"user_data\Default\Safe Browsing Network\Safe Browsing Cookies","file",3
+"user_data\Default\Safe Browsing Network\Safe Browsing Cookies-journal","file",3
+"user_data\Default\Secure Preferences","file",2
+"user_data\Default\Segmentation Platform","directory",2
+"user_data\Default\Segmentation Platform\SegmentInfoDB","directory",3
+"user_data\Default\Segmentation Platform\SegmentInfoDB\LOCK","file",4
+"user_data\Default\Segmentation Platform\SegmentInfoDB\LOG","file",4
+"user_data\Default\Segmentation Platform\SegmentInfoDB\LOG.old","file",4
+"user_data\Default\Segmentation Platform\SignalDB","directory",3
+"user_data\Default\Segmentation Platform\SignalDB\LOCK","file",4
+"user_data\Default\Segmentation Platform\SignalDB\LOG","file",4
+"user_data\Default\Segmentation Platform\SignalDB\LOG.old","file",4
+"user_data\Default\Segmentation Platform\SignalStorageConfigDB","directory",3
+"user_data\Default\Segmentation Platform\SignalStorageConfigDB\LOCK","file",4
+"user_data\Default\Segmentation Platform\SignalStorageConfigDB\LOG","file",4
+"user_data\Default\Segmentation Platform\SignalStorageConfigDB\LOG.old","file",4
+"user_data\Default\Service Worker","directory",2
+"user_data\Default\Service Worker\Database","directory",3
+"user_data\Default\Service Worker\Database\000003.log","file",4
+"user_data\Default\Service Worker\Database\CURRENT","file",4
+"user_data\Default\Service Worker\Database\LOCK","file",4
+"user_data\Default\Service Worker\Database\LOG","file",4
+"user_data\Default\Service Worker\Database\LOG.old","file",4
+"user_data\Default\Service Worker\Database\MANIFEST-000001","file",4
+"user_data\Default\Service Worker\ScriptCache","directory",3
+"user_data\Default\Service Worker\ScriptCache\2cc80dabc69f58b6_0","file",4
+"user_data\Default\Service Worker\ScriptCache\2cc80dabc69f58b6_1","file",4
+"user_data\Default\Service Worker\ScriptCache\4cb013792b196a35_0","file",4
+"user_data\Default\Service Worker\ScriptCache\4cb013792b196a35_1","file",4
+"user_data\Default\Service Worker\ScriptCache\index","file",4
+"user_data\Default\Service Worker\ScriptCache\index-dir","directory",4
+"user_data\Default\Session Storage","directory",2
+"user_data\Default\Session Storage\000003.log","file",3
+"user_data\Default\Session Storage\CURRENT","file",3
+"user_data\Default\Session Storage\LOCK","file",3
+"user_data\Default\Session Storage\LOG","file",3
+"user_data\Default\Session Storage\LOG.old","file",3
+"user_data\Default\Session Storage\MANIFEST-000001","file",3
+"user_data\Default\Sessions","directory",2
+"user_data\Default\Sessions\Session_13390650390849663","file",3
+"user_data\Default\Sessions\Session_13390650814693027","file",3
+"user_data\Default\Sessions\Tabs_13390650380748268","file",3
+"user_data\Default\Sessions\Tabs_13390650814836663","file",3
+"user_data\Default\Shared Dictionary","directory",2
+"user_data\Default\Shared Dictionary\cache","directory",3
+"user_data\Default\Shared Dictionary\cache\index","file",4
+"user_data\Default\Shared Dictionary\cache\index-dir","directory",4
+"user_data\Default\Shared Dictionary\db","file",3
+"user_data\Default\Shared Dictionary\db-journal","file",3
+"user_data\Default\SharedStorage","file",2
+"user_data\Default\SharedStorage-wal","file",2
+"user_data\Default\shared_proto_db","directory",2
+"user_data\Default\shared_proto_db\000003.log","file",3
+"user_data\Default\shared_proto_db\CURRENT","file",3
+"user_data\Default\shared_proto_db\LOCK","file",3
+"user_data\Default\shared_proto_db\LOG","file",3
+"user_data\Default\shared_proto_db\LOG.old","file",3
+"user_data\Default\shared_proto_db\MANIFEST-000001","file",3
+"user_data\Default\shared_proto_db\metadata","directory",3
+"user_data\Default\shared_proto_db\metadata\000003.log","file",4
+"user_data\Default\shared_proto_db\metadata\CURRENT","file",4
+"user_data\Default\shared_proto_db\metadata\LOCK","file",4
+"user_data\Default\shared_proto_db\metadata\LOG","file",4
+"user_data\Default\shared_proto_db\metadata\LOG.old","file",4
+"user_data\Default\shared_proto_db\metadata\MANIFEST-000001","file",4
+"user_data\Default\Shortcuts","file",2
+"user_data\Default\Shortcuts-journal","file",2
+"user_data\Default\Site Characteristics Database","directory",2
+"user_data\Default\Site Characteristics Database\000003.log","file",3
+"user_data\Default\Site Characteristics Database\CURRENT","file",3
+"user_data\Default\Site Characteristics Database\LOCK","file",3
+"user_data\Default\Site Characteristics Database\LOG","file",3
+"user_data\Default\Site Characteristics Database\LOG.old","file",3
+"user_data\Default\Site Characteristics Database\MANIFEST-000001","file",3
+"user_data\Default\Sync Data","directory",2
+"user_data\Default\Sync Data\LevelDB","directory",3
+"user_data\Default\Sync Data\LevelDB\000003.log","file",4
+"user_data\Default\Sync Data\LevelDB\CURRENT","file",4
+"user_data\Default\Sync Data\LevelDB\LOCK","file",4
+"user_data\Default\Sync Data\LevelDB\LOG","file",4
+"user_data\Default\Sync Data\LevelDB\LOG.old","file",4
+"user_data\Default\Sync Data\LevelDB\MANIFEST-000001","file",4
+"user_data\Default\Top Sites","file",2
+"user_data\Default\Top Sites-journal","file",2
+"user_data\Default\trusted_vault.pb","file",2
+"user_data\Default\Web Data","file",2
+"user_data\Default\Web Data-journal","file",2
+"user_data\Default\WebStorage","directory",2
+"user_data\Default\WebStorage\QuotaManager","file",3
+"user_data\Default\WebStorage\QuotaManager-journal","file",3
+"user_data\extensions_crx_cache","directory",1
+"user_data\extensions_crx_cache\metadata.json","file",2
+"user_data\first_party_sets.db","file",1
+"user_data\first_party_sets.db-journal","file",1
+"user_data\GraphiteDawnCache","directory",1
+"user_data\GraphiteDawnCache\data_0","file",2
+"user_data\GraphiteDawnCache\data_1","file",2
+"user_data\GraphiteDawnCache\data_2","file",2
+"user_data\GraphiteDawnCache\data_3","file",2
+"user_data\GraphiteDawnCache\index","file",2
+"user_data\GrShaderCache","directory",1
+"user_data\GrShaderCache\data_0","file",2
+"user_data\GrShaderCache\data_1","file",2
+"user_data\GrShaderCache\data_2","file",2
+"user_data\GrShaderCache\data_3","file",2
+"user_data\GrShaderCache\f_000001","file",2
+"user_data\GrShaderCache\f_000002","file",2
+"user_data\GrShaderCache\f_000003","file",2
+"user_data\GrShaderCache\f_000004","file",2
+"user_data\GrShaderCache\f_000005","file",2
+"user_data\GrShaderCache\f_000006","file",2
+"user_data\GrShaderCache\f_000007","file",2
+"user_data\GrShaderCache\f_000008","file",2
+"user_data\GrShaderCache\f_000009","file",2
+"user_data\GrShaderCache\f_00000a","file",2
+"user_data\GrShaderCache\f_00000b","file",2
+"user_data\GrShaderCache\f_00000c","file",2
+"user_data\GrShaderCache\f_00000d","file",2
+"user_data\GrShaderCache\f_00000e","file",2
+"user_data\GrShaderCache\f_00000f","file",2
+"user_data\GrShaderCache\f_000010","file",2
+"user_data\GrShaderCache\f_000011","file",2
+"user_data\GrShaderCache\f_000012","file",2
+"user_data\GrShaderCache\f_000013","file",2
+"user_data\GrShaderCache\index","file",2
+"user_data\Last Browser","file",1
+"user_data\Last Version","file",1
+"user_data\Local State","file",1
+"user_data\Safe Browsing","directory",1
+"user_data\segmentation_platform","directory",1
+"user_data\segmentation_platform\ukm_db","file",2
+"user_data\segmentation_platform\ukm_db-wal","file",2
+"user_data\ShaderCache","directory",1
+"user_data\ShaderCache\data_0","file",2
+"user_data\ShaderCache\data_1","file",2
+"user_data\ShaderCache\data_2","file",2
+"user_data\ShaderCache\data_3","file",2
+"user_data\ShaderCache\index","file",2
+"user_data\Variations","file",1

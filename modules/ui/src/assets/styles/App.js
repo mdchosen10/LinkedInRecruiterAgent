@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext';
+import { useAuth } from './contexts/auth-context';
 
 // Pages
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import CandidateProfilePage from './pages/CandidateProfilePage';
-import MessagingPage from './pages/MessagingPage';
-import SettingsPage from './pages/SettingsPage';
+import LoginPage from './pages/login-page';
+import DashboardPage from './pages/dashboard-page';
+import CandidatesPage from './pages/candidates-page'; // Import the missing CandidatesPage
+import CandidateProfilePage from './pages/candidate-profile-page';
+import MessagingPage from './pages/messaging-page';
+import SettingsPage from './pages/settings-page';
 
 // Layout components
-import MainLayout from './components/common/MainLayout';
+import MainLayout from './components/common/main-layout';
 
 // Protected route wrapper
 const ProtectedRoute = ({ children }) => {
@@ -57,6 +58,7 @@ function App() {
         }
       >
         <Route index element={<DashboardPage />} />
+        <Route path="candidates" element={<CandidatesPage />} /> {/* Add the candidates listing route */}
         <Route path="candidates/:id" element={<CandidateProfilePage />} />
         <Route path="messaging" element={<MessagingPage />} />
         <Route path="settings" element={<SettingsPage />} />

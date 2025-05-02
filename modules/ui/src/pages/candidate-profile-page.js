@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useData } from '../contexts/DataContext';
+import { useData } from '../contexts/data-context';
 
 // Components
-import CandidateHeader from '../components/candidates/CandidateHeader';
-import CandidateExperience from '../components/candidates/CandidateExperience';
-import CandidateEducation from '../components/candidates/CandidateEducation';
-import CandidateSkills from '../components/candidates/CandidateSkills';
-import CandidateEvaluation from '../components/candidates/CandidateEvaluation';
-import CandidateNotes from '../components/candidates/CandidateNotes';
-import CandidateActions from '../components/candidates/CandidateActions';
+import CandidateHeader from '../components/candidates/candidate-header';
+import CandidateExperience from '../components/candidates/candidate-experience';
+import CandidateEducation from '../components/candidates/candidate-education';
+import CandidateSkills from '../components/candidates/candidate-skills';
+import CandidateEvaluation from '../components/candidates/candidate-evaluation';
+import CandidateNotes from '../components/candidates/candidate-notes';
+import CandidateActions from '../components/candidates/candidate-actions';
 
 // Icons
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';

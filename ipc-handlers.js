@@ -22,14 +22,12 @@ function setupIpcHandlers(workflowManager) {
     }
   });
   
-  // LinkedIn interactions
-  ipcMain.handle('linkedin:login', async (event, credentials) => {
+  // Update the LinkedIn login handler
+  ipcMain.handle('connectToLinkedIn', async (event, data) => {
     try {
-      const userId = credentials.userId;
-      delete credentials.userId;
-      return await workflowManager.loginToLinkedIn(credentials, userId);
+      return await workflowManager.connectToLinkedIn(data.userId);
     } catch (error) {
-      console.error('LinkedIn login error:', error);
+      console.error('LinkedIn connection error:', error);
       return { success: false, error: error.message };
     }
   });
@@ -44,8 +42,50 @@ function setupIpcHandlers(workflowManager) {
   });
 
 
-  
-  // Handle all other IPC events...
+  // Add these handlers to your ipc-handlers.js file
+ipcMain.handle('get-credentials', async () => {
+  try {
+    // For testing, return mock credentials
+    return { success: true, credentials: { name: 'Test User', email: 'test@example.com' } };
+    
+    // Or if you're using store like in your existing handlers:
+    // const credentials = store.get('linkedin');
+    // return { success: true, credentials };
+  } catch (error) {
+    console.error('Error retrieving credentials:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('save-credentials', async (event, credentials) => {
+  try {
+    // For testing, just log the credentials
+    console.log('Saving credentials:', credentials);
+    return { success: true };
+    
+    // Or if you're using store:
+    // store.set('linkedin', credentials);
+    // return { success: true };
+  } catch (error) {
+    console.error('Error saving credentials:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('clear-credentials', async () => {
+  try {
+    // For testing
+    console.log('Clearing credentials');
+    return { success: true };
+    
+    // Or if you're using store:
+    // store.delete('linkedin');
+    // return { success: true };
+  } catch (error) {
+    console.error('Error clearing credentials:', error);
+    return { success: false, error: error.message };
+  }
+});
 }
 
 // Export the setup function

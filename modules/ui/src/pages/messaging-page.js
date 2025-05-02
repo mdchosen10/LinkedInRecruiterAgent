@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useData } from '../contexts/DataContext';
-import { getSampleMessageTemplates } from '../services/sampleData';
+import { useData } from '../contexts/data-context';
+import { getSampleMessageTemplates } from '../services/sample-data';
 
 // Components
-import MessageComposer from '../components/messaging/MessageComposer';
-import MessageTemplateSelector from '../components/messaging/MessageTemplateSelector';
-import CandidateSelector from '../components/messaging/CandidateSelector';
-import MessagePreview from '../components/messaging/MessagePreview';
+import MessageComposer from '../components/messaging/message-composer';
+import MessageTemplateSelector from '../components/messaging/message-template-selector';
+import CandidateSelector from '../components/messaging/candidate-selector';
+import MessagePreview from '../components/messaging/message-preview';
 
 // Icons
 import { PaperAirplaneIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
