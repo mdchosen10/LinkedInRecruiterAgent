@@ -1,5 +1,12 @@
 // Setup IPC handlers for communication with renderer process
 const { ipcMain } = require('electron');
+const Store = require('electron-store'); // Add this import
+
+// Initialize secure storage
+const store = new Store({
+  encryptionKey: 'secure-linkedin-recruiter-key',
+  name: 'secure-credentials'
+});
 
 function setupIpcHandlers(workflowManager) {
   // Authentication
@@ -22,16 +29,50 @@ function setupIpcHandlers(workflowManager) {
     }
   });
   
-  // Update the LinkedIn login handler
-  ipcMain.handle('connectToLinkedIn', async (event, data) => {
+  // LinkedIn interactions
+  ipcMain.handle('linkedin:login', async (event, credentials) => {
     try {
-      return await workflowManager.connectToLinkedIn(data.userId);
+      const userId = credentials.userId;
+      delete credentials.userId;
+      return await workflowManager.loginToLinkedIn(credentials, userId);
     } catch (error) {
-      console.error('LinkedIn connection error:', error);
+      console.error('LinkedIn login error:', error);
       return { success: false, error: error.message };
     }
   });
   
+  // Add these credential handlers
+  ipcMain.handle('get-credentials', async () => {
+    try {
+      const credentials = store.get('linkedin');
+      return { success: true, credentials };
+    } catch (error) {
+      console.error('Error retrieving credentials:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
+  ipcMain.handle('save-credentials', async (event, credentials) => {
+    try {
+      store.set('linkedin', credentials);
+      return { success: true };
+    } catch (error) {
+      console.error('Error saving credentials:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
+  ipcMain.handle('clear-credentials', async () => {
+    try {
+      store.delete('linkedin');
+      return { success: true };
+    } catch (error) {
+      console.error('Error clearing credentials:', error);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  // LinkedIn search
   ipcMain.handle('linkedin:search', async (event, criteria) => {
     try {
       return await workflowManager.linkedInAutomation.searchForCandidates(criteria);
@@ -41,51 +82,7 @@ function setupIpcHandlers(workflowManager) {
     }
   });
 
-
-  // Add these handlers to your ipc-handlers.js file
-ipcMain.handle('get-credentials', async () => {
-  try {
-    // For testing, return mock credentials
-    return { success: true, credentials: { name: 'Test User', email: 'test@example.com' } };
-    
-    // Or if you're using store like in your existing handlers:
-    // const credentials = store.get('linkedin');
-    // return { success: true, credentials };
-  } catch (error) {
-    console.error('Error retrieving credentials:', error);
-    return { success: false, error: error.message };
-  }
-});
-
-ipcMain.handle('save-credentials', async (event, credentials) => {
-  try {
-    // For testing, just log the credentials
-    console.log('Saving credentials:', credentials);
-    return { success: true };
-    
-    // Or if you're using store:
-    // store.set('linkedin', credentials);
-    // return { success: true };
-  } catch (error) {
-    console.error('Error saving credentials:', error);
-    return { success: false, error: error.message };
-  }
-});
-
-ipcMain.handle('clear-credentials', async () => {
-  try {
-    // For testing
-    console.log('Clearing credentials');
-    return { success: true };
-    
-    // Or if you're using store:
-    // store.delete('linkedin');
-    // return { success: true };
-  } catch (error) {
-    console.error('Error clearing credentials:', error);
-    return { success: false, error: error.message };
-  }
-});
+  // Rest of your handlers...
 }
 
 // Export the setup function

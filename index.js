@@ -115,8 +115,12 @@ function createWindow() {
   const reactAppPath = path.join(__dirname, 'modules/ui/build/index.html');
   console.log('Loading React app from:', reactAppPath);
   
-  mainWindow.loadURL(`file://${reactAppPath}`);
-  mainWindow.webContents.openDevTools();
+  const isDev = process.env.NODE_ENV === 'development';
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:3000');
+  } else {
+    mainWindow.loadFile(path.join(__dirname, 'modules/ui/build/index.html'));
+  }
 }
 
 // Electron app events
