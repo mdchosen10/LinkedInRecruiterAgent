@@ -1,0 +1,82 @@
+import React, { useState } from 'react';
+
+function App() {
+  const [apiResult, setApiResult] = useState(null);
+  const [error, setError] = useState(null);
+
+  const testCredentialsApi = async () => {
+    try {
+      if (window.api && window.api.getCredentials) {
+        const result = await window.api.getCredentials();
+        console.log('API result:', result);
+        setApiResult(result);
+      } else {
+        setError('getCredentials API not available');
+      }
+    } catch (err) {
+      console.error('API test error:', err);
+      setError(err.message);
+    }
+  };
+
+  return (
+    <div style={{ padding: '20px', fontFamily: 'system-ui, sans-serif' }}>
+      <h1 style={{ color: '#0077B5' }}>LinkedIn Recruiter</h1>
+      <p>React is mounting correctly.</p>
+      
+      {window.api ? (
+        <div>
+          <p>API is available with methods:</p>
+          <ul style={{ marginBottom: '20px' }}>
+            {Object.keys(window.api).map(method => (
+              <li key={method}>{method}</li>
+            ))}
+          </ul>
+          
+          <button 
+            style={{
+              padding: '10px 15px',
+              backgroundColor: '#0077B5',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginBottom: '20px'
+            }}
+            onClick={testCredentialsApi}
+          >
+            Test getCredentials API
+          </button>
+          
+          {apiResult && (
+            <div style={{ 
+              backgroundColor: '#f0f9ff', 
+              padding: '15px', 
+              borderRadius: '4px',
+              border: '1px solid #bae6fd'
+            }}>
+              <h3>API Result:</h3>
+              <pre>{JSON.stringify(apiResult, null, 2)}</pre>
+            </div>
+          )}
+          
+          {error && (
+            <div style={{ 
+              backgroundColor: '#fee2e2', 
+              padding: '15px', 
+              borderRadius: '4px',
+              border: '1px solid #fecaca'
+            }}>
+              <h3>Error:</h3>
+              <p>{error}</p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <p>API is not available</p>
+      )}
+    </div>
+  );
+}
+
+export default App;

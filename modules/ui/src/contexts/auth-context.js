@@ -1,28 +1,37 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
 
-// Create context
+// Create the context
 const AuthContext = createContext(null);
 
-// Provider component
+// Create provider component
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  const navigate = useNavigate();
-  
-  // Check if user is authenticated (via electron-store)
+
+  // Check if user is authenticated
   const checkAuth = useCallback(async () => {
+    console.log('Starting auth check...');
     setLoading(true);
     try {
+      if (!window.api || !window.api.getCredentials) {
+        console.warn('API not available or missing getCredentials - treating as unauthenticated');
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+        return;
+      }
+
+      console.log('Calling getCredentials...');
       const { success, credentials } = await window.api.getCredentials();
+      console.log('getCredentials result:', { success, credentials });
       
       if (success && credentials) {
+        console.log('Authentication successful, setting user:', credentials);
         setCurrentUser(credentials);
         setIsAuthenticated(true);
       } else {
+        console.log('No valid credentials found');
         setCurrentUser(null);
         setIsAuthenticated(false);
       }
@@ -33,78 +42,100 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(false);
     } finally {
       setLoading(false);
+      console.log('Auth check complete, authenticated:', isAuthenticated);
     }
   }, []);
-  
+
   // Login function
   const login = async (credentials) => {
-    setLoading(true);
+    console.log('Attempting login with credentials:', { ...credentials, password: '[REDACTED]' });
     setError(null);
     
     try {
-      // For demonstration, we'll just store credentials securely
-      // In production, you'd validate these credentials with LinkedIn API first
-      const { success } = await window.api.saveCredentials(credentials);
+      if (!window.api || !window.api.saveCredentials) {
+        console.error('API not available or missing saveCredentials');
+        setError('Authentication API unavailable. Please restart the application.');
+        return { success: false, error: 'API unavailable' };
+      }
       
-      if (success) {
-        setCurrentUser(credentials);
-        setIsAuthenticated(true);
-        navigate('/');
-        return true;
+      // Save credentials to secure storage
+      const result = await window.api.saveCredentials(credentials);
+      console.log('saveCredentials result:', result);
+      
+      if (result.success) {
+        // Refresh authentication state
+        await checkAuth();
+        return { success: true };
       } else {
-        throw new Error('Failed to save credentials');
+        setError(result.error || 'Authentication failed');
+        return { success: false, error: result.error };
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError('Login failed. Please check your credentials and try again.');
-      return false;
-    } finally {
-      setLoading(false);
+      setError('An unexpected error occurred during login.');
+      return { success: false, error: err.message };
     }
   };
-  
+
   // Logout function
   const logout = async () => {
-    setLoading(true);
-    
+    console.log('Logging out...');
     try {
-      await window.api.clearCredentials();
+      if (!window.api || !window.api.clearCredentials) {
+        console.error('API not available or missing clearCredentials');
+        setError('Logout API unavailable. Please restart the application.');
+        return { success: false, error: 'API unavailable' };
+      }
+      
+      // Clear credentials from secure storage
+      const result = await window.api.clearCredentials();
+      console.log('clearCredentials result:', result);
+      
+      // Reset auth state regardless of API result
       setCurrentUser(null);
       setIsAuthenticated(false);
-      navigate('/login');
+      
+      return { success: true };
     } catch (err) {
       console.error('Logout error:', err);
-      setError('Logout failed. Please try again.');
-    } finally {
-      setLoading(false);
+      
+      // Still reset auth state even if API fails
+      setCurrentUser(null);
+      setIsAuthenticated(false);
+      
+      return { success: false, error: err.message };
     }
   };
-  
-  // Clear any auth errors
-  const clearError = () => setError(null);
-  
-  // Context value
+
+  // Check authentication on component mount
+  useEffect(() => {
+    console.log('AuthProvider mounted, checking authentication...');
+    checkAuth();
+  }, [checkAuth]);
+
+  // Create context value
   const value = {
     currentUser,
     isAuthenticated,
     loading,
     error,
-    checkAuth,
     login,
     logout,
-    clearError
+    checkAuth
   };
-  
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 // Custom hook for using auth context
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  
-  if (!context) {
+  if (context === null) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-  
   return context;
 };

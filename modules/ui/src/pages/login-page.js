@@ -1,212 +1,163 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/auth-context';
 
-// Icons
-import { LockClosedIcon } from '@heroicons/react/24/solid';
-import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
-
 const LoginPage = () => {
-  const { login, isAuthenticated, error, clearError } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const { login, isAuthenticated, error: authError } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginError, setLoginError] = useState(null);
-  
-  // Redirect if already authenticated
+
+  // Check if already authenticated
   useEffect(() => {
+    console.log('LoginPage - checking authentication status:', isAuthenticated);
     if (isAuthenticated) {
-      const from = location.state?.from?.pathname || '/';
-      navigate(from, { replace: true });
+      console.log('User is already authenticated, redirecting to dashboard');
+      navigate('/');
     }
-  }, [isAuthenticated, navigate, location]);
-  
-  // Clear errors when component mounts
-  useEffect(() => {
-    clearError();
-  }, [clearError]);
-  
-  // Set error from context
-  useEffect(() => {
-    if (error) {
-      setLoginError(error);
+  }, [isAuthenticated, navigate]);
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Login form submitted');
+    
+    // Basic validation
+    if (!email || !password) {
+      setError('Email and password are required');
+      return;
     }
-  }, [error]);
-  
-  // Form validation schema
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email('Invalid email address')
-      .required('Email is required'),
-    password: Yup.string()
-      .min(8, 'Password must be at least 8 characters')
-      .required('Password is required')
-  });
-  
-  // Formik setup
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-      rememberMe: false
-    },
-    validationSchema,
-    onSubmit: async (values) => {
-      setLoginError(null);
+    
+    setSubmitting(true);
+    setError(null);
+    
+    try {
+      console.log('Attempting login with email:', email);
       
-      try {
-        // Attempt login
-        const success = await login({
-          email: values.email,
-          password: values.password,
-          rememberMe: values.rememberMe,
-          name: 'Demo User' // For demo purposes
-        });
-        
-        if (!success) {
-          setLoginError('Login failed. Please check your credentials and try again.');
-        }
-      } catch (err) {
-        setLoginError('An unexpected error occurred. Please try again.');
-        console.error('Login error:', err);
+      if (!window.api) {
+        console.error('API not available - cannot login');
+        setError('Authentication API unavailable. Please restart the application.');
+        setSubmitting(false);
+        return;
       }
+      
+      // Call login function from auth context
+      const result = await login({ email, password });
+      console.log('Login result:', result);
+      
+      if (result.success) {
+        console.log('Login successful, will redirect shortly');
+        setLoginSuccess(true);
+        // navigate will be triggered by useEffect when isAuthenticated changes
+      } else {
+        setError(result.error || 'Login failed. Please check your credentials.');
+      }
+    } catch (err) {
+      console.error('Login submission error:', err);
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
-  });
+  };
   
+  // Handle demo login (for testing)
+  const handleDemoLogin = async () => {
+    console.log('Demo login requested');
+    setEmail('demo@example.com');
+    setPassword('demo123');
+    
+    // Submit the form after setting demo credentials
+    setTimeout(() => {
+      const loginForm = document.getElementById('login-form');
+      if (loginForm) loginForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }, 100);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            LinkedIn Recruiter
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Sign in to access your recruiting dashboard
-          </p>
+    <div className="flex h-screen bg-gray-50">
+      <div className="m-auto w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold text-linkedin-blue">LinkedIn Recruiter Tool</h1>
+          <p className="text-gray-600 mt-2">Sign in to access your account</p>
         </div>
         
-        {/* Login form */}
-        <form className="mt-8 space-y-6" onSubmit={formik.handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            {/* Email field */}
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-linkedin-blue focus:border-linkedin-blue focus:z-10 sm:text-sm ${
-                  formik.touched.email && formik.errors.email ? 'border-red-500' : ''
-                }`}
-                placeholder="Email address"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.email && formik.errors.email && (
-                <div className="text-red-500 text-xs mt-1 flex items-center">
-                  <ExclamationCircleIcon className="h-4 w-4 mr-1" />
-                  {formik.errors.email}
-                </div>
-              )}
-            </div>
-            
-            {/* Password field */}
-            <div className="relative">
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="current-password"
-                className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-linkedin-blue focus:border-linkedin-blue focus:z-10 sm:text-sm ${
-                  formik.touched.password && formik.errors.password ? 'border-red-500' : ''
-                }`}
-                placeholder="Password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-              />
-              <button
-                type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? 'Hide' : 'Show'}
-              </button>
-            </div>
-            {formik.touched.password && formik.errors.password && (
-              <div className="text-red-500 text-xs mt-1 flex items-center">
-                <ExclamationCircleIcon className="h-4 w-4 mr-1" />
-                {formik.errors.password}
-              </div>
-            )}
+        {loginSuccess && (
+          <div className="mb-4 p-3 bg-green-100 text-green-800 rounded">
+            Login successful! Redirecting...
+          </div>
+        )}
+        
+        {(error || authError) && (
+          <div className="mb-4 p-3 bg-red-100 text-red-800 rounded">
+            {error || authError}
+          </div>
+        )}
+        
+        <form id="login-form" onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="email" className="form-label">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="input"
+              placeholder="your.email@example.com"
+              disabled={submitting}
+            />
           </div>
           
-          {/* Remember me checkbox */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="rememberMe"
-                name="rememberMe"
-                type="checkbox"
-                className="h-4 w-4 text-linkedin-blue focus:ring-linkedin-blue border-gray-300 rounded"
-                checked={formik.values.rememberMe}
-                onChange={formik.handleChange}
-              />
-              <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
-            
-            <div className="text-sm">
-              <a href="#forgot-password" className="font-medium text-linkedin-blue hover:text-linkedin-dark-blue">
-                Forgot your password?
-              </a>
-            </div>
+          <div>
+            <label htmlFor="password" className="form-label">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="input"
+              placeholder="********"
+              disabled={submitting}
+            />
           </div>
           
-          {/* Login error message */}
-          {loginError && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <ExclamationCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
-                </div>
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">{loginError}</h3>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {/* Submit button */}
           <div>
             <button
               type="submit"
-              disabled={formik.isSubmitting}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-linkedin-blue hover:bg-linkedin-dark-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-linkedin-blue"
+              className="btn-primary w-full"
+              disabled={submitting}
             >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <LockClosedIcon className="h-5 w-5 text-linkedin-lighter-blue group-hover:text-white" aria-hidden="true" />
-              </span>
-              {formik.isSubmitting ? 'Signing in...' : 'Sign in'}
+              {submitting ? (
+                <span className="flex items-center justify-center">
+                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Signing in...
+                </span>
+              ) : (
+                'Sign In'
+              )}
             </button>
           </div>
-          
-          {/* Help text */}
-          <div className="text-center text-sm text-gray-600">
-            <p>For demo purposes, any email and password will work</p>
-          </div>
         </form>
+        
+        <div className="mt-6 text-center">
+          <button
+            onClick={handleDemoLogin}
+            className="text-linkedin-blue hover:underline text-sm"
+            disabled={submitting}
+          >
+            Use demo account
+          </button>
+        </div>
+        
+        <div className="mt-8 pt-6 border-t border-gray-200 text-center text-sm text-gray-600">
+          <p>This application connects to LinkedIn for recruitment automation.</p>
+          <p className="mt-2">For support, contact your administrator.</p>
+        </div>
       </div>
     </div>
   );

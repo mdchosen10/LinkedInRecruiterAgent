@@ -6,12 +6,15 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 // Expose validated data from the main process to the renderer
 contextBridge.exposeInMainWorld('api', {
-  // Authentication
-  login: (credentials) => ipcRenderer.invoke('auth:login', credentials),  // Changed this line
-  connectToLinkedIn: (data) => ipcRenderer.invoke('connectToLinkedIn', data),
+  // Authentication methods used by auth-context.js
+  getCredentials: () => ipcRenderer.invoke('get-credentials'),
+  saveCredentials: (credentials) => ipcRenderer.invoke('save-credentials', credentials),
+  clearCredentials: () => ipcRenderer.invoke('clear-credentials'),
+  
+  // Existing methods
+  login: (credentials) => ipcRenderer.invoke('auth:login', credentials),  
   logout: () => ipcRenderer.invoke('auth:logout'),
   
-
   // LinkedIn
   loginToLinkedIn: (credentials) => ipcRenderer.invoke('linkedin:login', credentials),
   connectToLinkedIn: (data) => ipcRenderer.invoke('connectToLinkedIn', data),
@@ -47,3 +50,9 @@ contextBridge.exposeInMainWorld('events', {
     }
   }
 });
+
+// Log successful loading
+console.log('Preload script loaded successfully. API methods:', [
+  'getCredentials', 'saveCredentials', 'clearCredentials',
+  'login', 'logout', 'loginToLinkedIn', 'connectToLinkedIn'
+]);
