@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from './contexts/auth-context';
+import { useAuth } from '../../contexts/auth-context';
 
 // Pages
-import LoginPage from './pages/login-page';
-import DashboardPage from './pages/dashboard-page';
-import CandidatesPage from './pages/candidates-page'; // Import the missing CandidatesPage
-import CandidateProfilePage from './pages/candidate-profile-page';
-import MessagingPage from './pages/messaging-page';
-import SettingsPage from './pages/settings-page';
+import LoginPage from '../../pages/login-page';
+import DashboardPage from '../../pages/dashboard-page';
+import CandidatesPage from '../../pages/candidates-page'; // Import the missing CandidatesPage
+import CandidateProfilePage from '../../pages/candidate-profile-page';
+import MessagingPage from '../../pages/messaging-page';
+import SettingsPage from '../../pages/settings-page';
 
 // Layout components
-import MainLayout from './components/common/main-layout';
+import MainLayout from '../../components/common/main-layout';
 
 // Protected route wrapper
 const ProtectedRoute = ({ children }) => {
