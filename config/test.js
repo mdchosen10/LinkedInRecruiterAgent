@@ -1,102 +1,92 @@
 /**
- * Test configuration for the LinkedIn Recruitment Automation System
- * This file contains test-specific settings that override the default configuration
+ * Test configuration for LinkedIn Recruiter Agent
+ * This configuration is used for testing purposes only.
  */
 
-// Import default config to extend it
-const defaultConfig = require('./default');
-
-// Test-specific configuration
-const testConfig = {
-  // Application settings
-  app: {
-    ...defaultConfig.app,
-    name: 'LinkedIn Recruitment Automation (Test)',
-    port: 3001 // Use a different port for testing
+module.exports = {
+  // Authentication configuration
+  auth: {
+    jwtSecret: 'test-jwt-secret-key-for-development-only',
+    tokenExpiration: '24h',
+    refreshTokenExpiration: '7d'
   },
-
-  // LinkedIn Automation settings
-  linkedInAutomation: {
-    ...defaultConfig.linkedInAutomation,
-    rateLimiting: {
-      maxRequestsPerHour: 10, // Reduced rate for testing
-      delayBetweenRequests: 5000 // Longer delay for testing
-    },
-    browser: {
-      headless: false, // Show browser for testing
-      slowMo: 100 // Slow down browser actions for visibility
-    },
-    // Test credentials - replace with real ones or use environment variables
-    credentials: {
-      username: process.env.LINKEDIN_TEST_USERNAME || 'test@example.com',
-      password: process.env.LINKEDIN_TEST_PASSWORD || 'replaceme'
-    }
-  },
-
-  // Evaluation Engine settings
-  evaluationEngine: {
-    ...defaultConfig.evaluationEngine,
-    apiKey: process.env.CLAUDE_API_KEY || defaultConfig.evaluationEngine.apiKey,
-    // Use a smaller model for testing if available
-    model: process.env.TEST_MODEL || defaultConfig.evaluationEngine.model
-  },
-
-  // Message Generator settings
-  messageGenerator: {
-    ...defaultConfig.messageGenerator,
-    // Use same templates as default
-  },
-
-  // Data Storage settings
-  dataStorage: {
-    database: {
-      path: './data/test.db', // Use a separate test database
-      backupPath: './data/test_backups/'
+  
+  // Database configuration
+  database: {
+    dialect: 'sqlite',
+    storage: ':memory:', // In-memory database for testing
+    logging: false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
     }
   },
   
-  // Test specific settings
-  test: {
-    // Test user
-    user: {
-      username: 'testuser',
-      password: 'testpassword123',
-      name: 'Test User',
-      email: 'test@example.com'
+  // LinkedIn automation configuration
+  linkedInAutomation: {
+    headless: false, // Set to true for automated testing
+    rateLimit: {
+      requestsPerHour: 30,
+      cooldownPeriod: 10000 // 10 seconds between actions
     },
-    // Test job
-    job: {
-      title: 'Senior Software Engineer',
-      description: 'We are looking for a skilled software engineer with expertise in Node.js and React.',
-      requirements: ['Node.js', 'React', 'JavaScript', '5+ years experience'],
-      company: 'Example Tech Corp',
-      location: 'Remote'
+    retryOptions: {
+      maxRetries: 3,
+      retryDelay: 5000
     },
-    // LinkedIn search criteria for testing
-    searchCriteria: {
-      keywords: 'software engineer node.js react',
-      location: 'United States',
-      connectionDegree: '2nd',
-      resultCount: 5
+    downloadPath: './test_downloads',
+    userDataDir: './test_user_data'
+  },
+  
+  // Evaluation engine configuration
+  evaluationEngine: {
+    apiKey: process.env.ANTHROPIC_API_KEY || 'dummy-api-key-for-testing',
+    model: 'claude-3-5-sonnet-20240620',
+    criteriaWeights: {
+      technicalSkills: 0.3,
+      relevantExperience: 0.3,
+      education: 0.15,
+      cultureFit: 0.1,
+      achievements: 0.15
     },
-    // Mock candidate data for testing without LinkedIn
-    mockCandidates: [
+    thresholds: {
+      interview: 8.0,
+      video: 6.0
+    }
+  },
+  
+  // Test data
+  testData: {
+    jobPostings: [
       {
-        name: 'John Smith',
-        current_title: 'Senior Frontend Developer',
-        current_company: 'Tech Innovators',
-        skills: ['JavaScript', 'React', 'TypeScript', 'Redux'],
-        profileUrl: 'https://linkedin.com/in/john-smith-123'
+        id: '4206700740',
+        title: 'Software Engineering role at Duolingo',
+        url: 'https://www.linkedin.com/hiring/jobs/4206700740/detail/'
       },
       {
-        name: 'Sarah Johnson',
-        current_title: 'Full Stack Engineer',
-        current_company: 'WebSolutions Inc',
-        skills: ['Node.js', 'React', 'MongoDB', 'AWS'],
-        profileUrl: 'https://linkedin.com/in/sarah-johnson-456'
+        id: '4206700740',
+        title: 'Creative Recruiter Job',
+        url: 'https://www.linkedin.com/hiring/jobs/4206700740/detail/'
+      },
+      {
+        id: '4206399817',
+        title: 'Senior Graphic Designer Job',
+        url: 'https://www.linkedin.com/hiring/jobs/4206399817/detail/'
+      },
+      {
+        id: '4206700760',
+        title: 'Project Manager Job',
+        url: 'https://www.linkedin.com/hiring/jobs/4206700760/detail/'
       }
-    ]
+    ],
+    sampleUser: {
+      id: 1,
+      username: 'test-user',
+      password: 'test-password',
+      email: 'test@example.com',
+      name: 'Test User',
+      role: 'recruiter'
+    }
   }
 };
-
-module.exports = testConfig;

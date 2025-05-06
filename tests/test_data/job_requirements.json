@@ -1,0 +1,98 @@
+{
+  "software_engineer": {
+    "title": "Senior Software Engineer",
+    "description": "We are looking for an experienced full-stack developer with strong React and Node.js skills to join our engineering team. The ideal candidate will have experience building scalable web applications and working in an agile environment.",
+    "requiredSkills": [
+      "JavaScript",
+      "React",
+      "Node.js",
+      "REST API",
+      "Git"
+    ],
+    "preferredSkills": [
+      "TypeScript",
+      "AWS",
+      "MongoDB",
+      "Docker",
+      "CI/CD"
+    ],
+    "experienceRequirements": "Minimum 5 years of professional software development experience with at least 3 years working with React and Node.js.",
+    "educationRequirements": "Bachelor's degree in Computer Science or related field, or equivalent practical experience.",
+    "certifications": [
+      "AWS Certified Developer"
+    ],
+    "languages": [
+      "English"
+    ]
+  },
+  "creative_recruiter": {
+    "title": "Creative Talent Recruiter",
+    "description": "We're seeking a talented Creative Recruiter to join our team. The ideal candidate will have experience in talent acquisition within the creative industry and a strong network of connections with creative professionals.",
+    "requiredSkills": [
+      "Talent Acquisition",
+      "Candidate Sourcing",
+      "Recruitment Process",
+      "Portfolio Review"
+    ],
+    "preferredSkills": [
+      "Creative Industry Knowledge",
+      "Applicant Tracking Systems",
+      "LinkedIn Recruiter",
+      "Talent Pipeline Management"
+    ],
+    "experienceRequirements": "Minimum 3 years of experience in recruiting for creative roles such as designers, copywriters, and art directors.",
+    "educationRequirements": "Bachelor's degree in Human Resources, Business, or related field preferred.",
+    "certifications": [],
+    "languages": [
+      "English"
+    ]
+  },
+  "senior_graphic_designer": {
+    "title": "Senior Graphic Designer",
+    "description": "We are looking for a Senior Graphic Designer to create stunning visual concepts for our clients. The ideal candidate will have a strong portfolio demonstrating expertise in brand identity, typography, and digital design.",
+    "requiredSkills": [
+      "Adobe Creative Suite",
+      "Visual Design",
+      "Typography",
+      "Brand Identity"
+    ],
+    "preferredSkills": [
+      "Motion Graphics",
+      "Digital Design",
+      "Packaging Design",
+      "Illustration",
+      "UI/UX Design"
+    ],
+    "experienceRequirements": "Minimum 5 years of experience in graphic design with demonstrated leadership on major projects.",
+    "educationRequirements": "Bachelor's degree in Graphic Design, Visual Arts, or related field.",
+    "certifications": [],
+    "languages": [
+      "English"
+    ]
+  },
+  "project_manager": {
+    "title": "Project Manager",
+    "description": "We're looking for an experienced Project Manager to oversee creative projects from concept to completion. The ideal candidate will have strong organizational skills and experience managing creative teams.",
+    "requiredSkills": [
+      "Project Planning",
+      "Client Communication",
+      "Budget Management",
+      "Timeline Planning"
+    ],
+    "preferredSkills": [
+      "Agile Methodologies",
+      "Resource Allocation",
+      "Risk Management",
+      "Creative Project Experience"
+    ],
+    "experienceRequirements": "Minimum 4 years of experience managing projects, preferably in a creative agency environment.",
+    "educationRequirements": "Bachelor's degree in Business, Communications, or related field.",
+    "certifications": [
+      "PMP",
+      "Scrum Master"
+    ],
+    "languages": [
+      "English"
+    ]
+  }
+}

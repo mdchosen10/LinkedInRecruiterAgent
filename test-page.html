@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LinkedIn Recruiter Tool - Test Page</title>
+  <script>
+    // Debug window.api availability
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM content loaded in test page');
+      console.log('window.api available:', !!window.api);
+      if (window.api) {
+        console.log('API methods:', Object.keys(window.api));
+      }
+      
+      // Render simple content to the DOM
+      const rootElement = document.getElementById('root');
+      if (rootElement) {
+        rootElement.innerHTML = `
+          <div style="font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+            <h1 style="color: #0077b5;">LinkedIn Recruiter Tool - Test Page</h1>
+            <p>This is a test page to verify the Electron environment is working correctly.</p>
+            <div id="api-status"></div>
+            <hr />
+            <button id="test-btn" style="background: #0077b5; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+              Test API Connection
+            </button>
+          </div>
+        `;
+        
+        // Add button click handler
+        const testBtn = document.getElementById('test-btn');
+        const apiStatus = document.getElementById('api-status');
+        
+        if (testBtn) {
+          testBtn.addEventListener('click', async () => {
+            apiStatus.innerHTML = '<p>Testing API connection...</p>';
+            
+            try {
+              if (window.api && window.api.getAppVersion) {
+                const version = await window.api.getAppVersion();
+                apiStatus.innerHTML = `<p style="color: green;">API connection successful! App version: ${version}</p>`;
+              } else if (window.api) {
+                apiStatus.innerHTML = `<p style="color: orange;">API available but getAppVersion method not found. Available methods: ${Object.keys(window.api).join(', ')}</p>`;
+              } else {
+                apiStatus.innerHTML = '<p style="color: red;">API not available. Check preload script.</p>';
+              }
+            } catch (error) {
+              apiStatus.innerHTML = `<p style="color: red;">Error testing API: ${error.message}</p>`;
+            }
+          });
+        }
+      } else {
+        console.error('Root element not found');
+      }
+    });
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>

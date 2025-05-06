@@ -1,0 +1,279 @@
+/**
+ * LinkedIn Automation UI Styles
+ * 
+ * Styles for the LinkedIn Extractor UI component
+ */
+
+.linkedin-extractor {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  color: #333;
+}
+
+.linkedin-extractor h2 {
+  color: #0077b5;
+  border-bottom: 2px solid #0077b5;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.linkedin-extractor h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #0077b5;
+  font-weight: 500;
+}
+
+/* Job Info */
+.job-info {
+  background-color: #f3f6f8;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+/* Extraction Options */
+.extraction-options {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.option-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.option-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.option-group input[type="number"] {
+  width: 70px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.option-group input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+/* Control Buttons */
+.control-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.control-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.control-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.start-button {
+  background-color: #0077b5;
+  color: white;
+}
+
+.start-button:hover:not(:disabled) {
+  background-color: #005582;
+}
+
+.pause-button {
+  background-color: #f5a623;
+  color: white;
+}
+
+.pause-button:hover:not(:disabled) {
+  background-color: #d48c1d;
+}
+
+.resume-button {
+  background-color: #26a69a;
+  color: white;
+}
+
+.resume-button:hover:not(:disabled) {
+  background-color: #1f8a7f;
+}
+
+.stop-button {
+  background-color: #e53935;
+  color: white;
+}
+
+.stop-button:hover:not(:disabled) {
+  background-color: #c62828;
+}
+
+.export-button {
+  background-color: #43a047;
+  color: white;
+}
+
+.export-button:hover:not(:disabled) {
+  background-color: #388e3c;
+}
+
+/* Progress Display */
+.progress-container {
+  background-color: #e8f4f9;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.progress-bar-container {
+  height: 20px;
+  background-color: #ddd;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #0077b5;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 500;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.current-item {
+  margin-top: 10px;
+  font-style: italic;
+}
+
+.batch-progress {
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.paused-notice {
+  margin-top: 10px;
+  font-weight: 500;
+  color: #f5a623;
+}
+
+/* Error Display */
+.error-container {
+  background-color: #ffebee;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border-left: 4px solid #e53935;
+}
+
+.error-message {
+  color: #c62828;
+  margin: 0;
+}
+
+/* Results Display */
+.results-container {
+  margin-bottom: 20px;
+}
+
+.applicants-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.applicants-table th, 
+.applicants-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.applicants-table th {
+  background-color: #f3f6f8;
+  font-weight: 500;
+}
+
+.applicants-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.applicants-table a {
+  color: #0077b5;
+  text-decoration: none;
+}
+
+.applicants-table a:hover {
+  text-decoration: underline;
+}
+
+.no-cv {
+  color: #999;
+  font-style: italic;
+}
+
+/* Statistics */
+.stats-container {
+  background-color: #f3f6f8;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.stat-item {
+  background-color: white;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #0077b5;
+}

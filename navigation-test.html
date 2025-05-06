@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Recruiter Navigation Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    
+    h1 {
+      color: #0077b5;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    
+    .test-section h2 {
+      margin-top: 0;
+    }
+    
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    
+    button {
+      padding: 8px 16px;
+      border: 1px solid #0077b5;
+      background-color: #fff;
+      color: #0077b5;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    button:hover {
+      background-color: #0077b5;
+      color: #fff;
+    }
+    
+    button.primary {
+      background-color: #0077b5;
+      color: #fff;
+    }
+    
+    button.primary:hover {
+      background-color: #005582;
+    }
+    
+    .log-area {
+      margin-top: 30px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      background-color: #f5f5f5;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .log-entry {
+      margin: 5px 0;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    
+    .success {
+      color: green;
+    }
+    
+    .error {
+      color: red;
+    }
+    
+    .info {
+      color: blue;
+    }
+  </style>
+</head>
+<body>
+  <h1>LinkedIn Recruiter Navigation Test</h1>
+  
+  <div class="test-section">
+    <h2>Navigation Button Tests</h2>
+    <p>Click the buttons below to test navigation functionality:</p>
+    
+    <div class="button-row">
+      <button id="dashboardButton">Dashboard</button>
+      <button id="startLinkedInBrowserButton" class="primary">LinkedIn Browser</button>
+      <button id="startExtractionButton" class="primary">Start Extraction</button>
+      <button id="candidatesButton">Candidates</button>
+      <button id="messagingButton">Messaging</button>
+      <button id="settingsButton">Settings</button>
+      <button id="logoutButton">Logout</button>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Direct Command Tests</h2>
+    <p>Click the buttons below to test direct command functions:</p>
+    
+    <div class="button-row">
+      <button onclick="window.directLinkedInBrowser()">Direct LinkedIn Browser</button>
+      <button onclick="window.directStartExtraction()">Direct Start Extraction</button>
+      <button onclick="window.directLogout()">Direct Logout</button>
+    </div>
+  </div>
+  
+  <div class="test-section">
+    <h2>API Availability Test</h2>
+    <p>Test if the Electron API is properly available:</p>
+    
+    <div class="button-row">
+      <button id="checkApiButton">Check API</button>
+      <button id="listApiMethodsButton">List API Methods</button>
+    </div>
+    
+    <div id="apiStatus">API Status: Checking...</div>
+  </div>
+  
+  <div class="log-area">
+    <h3>Test Log</h3>
+    <div id="logOutput"></div>
+  </div>
+  
+  <script>
+    // Add log entry
+    function addLog(message, type = 'info') {
+      const logOutput = document.getElementById('logOutput');
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+      logOutput.appendChild(entry);
+      logOutput.scrollTop = logOutput.scrollHeight;
+    }
+    
+    // Test API availability
+    function checkApi() {
+      const apiStatus = document.getElementById('apiStatus');
+      
+      if (window.api) {
+        apiStatus.textContent = 'API Status: ✅ Available';
+        apiStatus.style.color = 'green';
+        addLog('Electron API is available', 'success');
+      } else {
+        apiStatus.textContent = 'API Status: ❌ Not Available';
+        apiStatus.style.color = 'red';
+        addLog('Electron API is NOT available', 'error');
+      }
+    }
+    
+    // List API methods
+    function listApiMethods() {
+      if (window.api) {
+        const methods = Object.keys(window.api);
+        addLog(`API Methods (${methods.length}): ${methods.join(', ')}`, 'info');
+      } else {
+        addLog('Cannot list API methods - API not available', 'error');
+      }
+    }
+    
+    // Setup event handlers
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check API button
+      document.getElementById('checkApiButton').addEventListener('click', checkApi);
+      
+      // List API methods button
+      document.getElementById('listApiMethodsButton').addEventListener('click', listApiMethods);
+      
+      // Dashboard button
+      document.getElementById('dashboardButton').addEventListener('click', function() {
+        addLog('Dashboard button clicked');
+        if (window.NavigationBridge) {
+          window.NavigationBridge.navigate('dashboard');
+        } else {
+          addLog('NavigationBridge not available', 'error');
+        }
+      });
+      
+      // Run initial API check
+      setTimeout(checkApi, 1000);
+      
+      // Log when clean architecture is loaded
+      if (window.cleanArchitecture) {
+        addLog('Clean Architecture Fix is loaded', 'success');
+      } else {
+        const checkInterval = setInterval(() => {
+          if (window.cleanArchitecture) {
+            addLog('Clean Architecture Fix is now loaded', 'success');
+            clearInterval(checkInterval);
+          }
+        }, 1000);
+        
+        // Stop checking after 10 seconds
+        setTimeout(() => clearInterval(checkInterval), 10000);
+      }
+    });
+  </script>
+</body>
+</html>

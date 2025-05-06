@@ -9,6 +9,7 @@ import CandidatesPage from './pages/candidates-page';
 import CandidateProfilePage from './pages/candidate-profile-page';
 import MessagingPage from './pages/messaging-page';
 import SettingsPage from './pages/settings-page';
+import LinkedInExtractionPage from './pages/linkedin-extraction-page';
 import MainLayout from './components/common/main-layout';
 
 // Create a ProtectedRoute component
@@ -29,11 +30,42 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   const { checkAuth, isAuthenticated, loading } = useAuth();
   
-  // Debug API availability
+  // Debug API availability and add direct event handlers
   useEffect(() => {
     try {
       if (window.api) {
         console.log('App: Electron API is available:', Object.keys(window.api));
+
+        // Add a global click handler to debug clicks
+        const handleGlobalClick = (e) => {
+          console.log('Global click detected on:', e.target.tagName, e.target.className);
+          
+          // If this is a button with certain text, handle logout directly
+          if (e.target.tagName === 'BUTTON' && 
+              (e.target.innerText.includes('Logout') || 
+               e.target.innerText.includes('logout'))) {
+            console.log('Logout button detected via global handler');
+            
+            // Try direct logout via API
+            if (window.api.clearCredentials) {
+              window.api.clearCredentials()
+                .then(result => {
+                  console.log('Direct logout result:', result);
+                  window.location.href = '#/login';
+                  window.location.reload();
+                })
+                .catch(err => console.error('Direct logout error:', err));
+            }
+          }
+        };
+        
+        // Add the global handler
+        document.addEventListener('click', handleGlobalClick);
+        
+        // Return cleanup function
+        return () => {
+          document.removeEventListener('click', handleGlobalClick);
+        };
       } else {
         console.warn('App: Electron API is not available');
       }
@@ -80,6 +112,13 @@ function App() {
         <ProtectedRoute>
           <MainLayout>
             <SettingsPage />
+          </MainLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/linkedin-extraction" element={
+        <ProtectedRoute>
+          <MainLayout>
+            <LinkedInExtractionPage />
           </MainLayout>
         </ProtectedRoute>
       } />

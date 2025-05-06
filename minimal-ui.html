@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LinkedIn Recruiter Tool - Minimal UI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #0077b5;
+    }
+    .card {
+      border: 1px solid #e0e0e0;
+      border-radius: 5px;
+      padding: 15px;
+      margin: 15px 0;
+      background: #f9f9f9;
+    }
+    .btn {
+      background: #0077b5;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px 5px 10px 0;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .btn:hover {
+      background: #006097;
+    }
+    .btn-red {
+      background: #d32f2f;
+    }
+    .btn-red:hover {
+      background: #b71c1c;
+    }
+    .status {
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .success {
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+    }
+    .error {
+      background: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+    }
+    .footer {
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+      color: #757575;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>LinkedIn Recruiter Tool</h1>
+    <p>This is a simplified version of the UI to test core functionality.</p>
+    
+    <div class="card">
+      <h2>Login Status</h2>
+      <div id="loginStatus">Checking login status...</div>
+      <button id="logoutBtn" class="btn btn-red">Logout</button>
+    </div>
+    
+    <div class="card">
+      <h2>LinkedIn Automation</h2>
+      <p>Test the LinkedIn automation functionality.</p>
+      <button id="browserBtn" class="btn">Start LinkedIn Browser</button>
+      <input type="text" id="jobUrl" placeholder="Enter LinkedIn job URL" style="width: 300px; padding: 8px; margin-top: 10px;">
+      <button id="extractBtn" class="btn">Extract Job Data</button>
+    </div>
+    
+    <div class="card">
+      <h2>Status Messages</h2>
+      <div id="statusMessages" class="status">No actions performed yet.</div>
+    </div>
+    
+    <div class="footer">
+      <p>Version: <span id="appVersion">Loading...</span></p>
+    </div>
+  </div>
+
+  <script>
+    // DOM Ready
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM loaded in minimal UI');
+      
+      // References
+      const logoutBtn = document.getElementById('logoutBtn');
+      const browserBtn = document.getElementById('browserBtn');
+      const extractBtn = document.getElementById('extractBtn');
+      const loginStatus = document.getElementById('loginStatus');
+      const statusMessages = document.getElementById('statusMessages');
+      const appVersionSpan = document.getElementById('appVersion');
+      const jobUrlInput = document.getElementById('jobUrl');
+      
+      // Check API availability
+      if (!window.api) {
+        updateStatus('API is not available. Please restart the application.', true);
+        return;
+      }
+      
+      // Get app version
+      window.api.getAppVersion()
+        .then(version => {
+          appVersionSpan.textContent = version || '1.0.0';
+        })
+        .catch(err => {
+          console.error('Error getting app version:', err);
+          appVersionSpan.textContent = '1.0.0';
+        });
+      
+      // Check login status
+      window.api.getCredentials()
+        .then(result => {
+          if (result.success && result.credentials) {
+            loginStatus.textContent = `Logged in as: ${result.credentials.username || 'User'}`;
+          } else {
+            loginStatus.textContent = 'Not logged in';
+          }
+        })
+        .catch(err => {
+          console.error('Error checking credentials:', err);
+          loginStatus.textContent = 'Error checking login status';
+        });
+      
+      // Logout handler with every possible method
+      logoutBtn.addEventListener('click', async () => {
+        console.log('Logout button clicked');
+        updateStatus('Logging out...');
+        
+        try {
+          // Method 1: Using the API
+          if (window.api.clearCredentials) {
+            const result = await window.api.clearCredentials();
+            console.log('Logout result:', result);
+            
+            loginStatus.textContent = 'Logged out successfully';
+            updateStatus('Logged out successfully. Refreshing page in 3 seconds...', false);
+            
+            // Method 2: Simple reload after timeout
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+          } else {
+            throw new Error('Logout function not available');
+          }
+        } catch (err) {
+          console.error('Logout error:', err);
+          updateStatus('Error during logout: ' + (err.message || 'Unknown error'), true);
+          
+          // Method 3: Direct hash change and reload
+          setTimeout(() => {
+            window.location.href = '#/login';
+            window.location.reload();
+          }, 3000);
+        }
+      });
+      
+      // LinkedIn browser button
+      browserBtn.addEventListener('click', async () => {
+        console.log('Start LinkedIn Browser button clicked');
+        updateStatus('Starting LinkedIn browser...');
+        
+        try {
+          const result = await window.api.startLinkedInBrowser();
+          console.log('Browser start result:', result);
+          
+          if (result.success) {
+            updateStatus('LinkedIn browser started successfully', false);
+          } else {
+            updateStatus('LinkedIn browser start failed: ' + (result.error || 'Unknown error'), true);
+          }
+        } catch (err) {
+          console.error('LinkedIn browser error:', err);
+          updateStatus('Error starting LinkedIn browser: ' + (err.message || 'Unknown error'), true);
+          
+          if (err.message && err.message.includes('Playwright')) {
+            updateStatus('It looks like Playwright is not installed. Run "npx playwright install" from the command line.', true);
+          }
+        }
+      });
+      
+      // Extract job data button
+      extractBtn.addEventListener('click', async () => {
+        console.log('Extract Job Data button clicked');
+        const jobUrl = jobUrlInput.value.trim();
+        
+        if (!jobUrl) {
+          updateStatus('Please enter a LinkedIn job URL', true);
+          return;
+        }
+        
+        updateStatus('Analyzing URL: ' + jobUrl);
+        
+        try {
+          // Extract IDs from URL
+          const jobId = extractJobId(jobUrl);
+          const applicantViewId = extractApplicantViewId(jobUrl);
+          
+          console.log('Extracted job ID:', jobId);
+          console.log('Extracted applicant view ID:', applicantViewId);
+          
+          if (!jobId) {
+            updateStatus('Could not extract job ID from URL. Supported formats include: /hiring/jobs/1234567/detail/ or /jobs/view/1234567', true);
+            return;
+          }
+          
+          // Prepare extraction options
+          const extractionOptions = {
+            jobId: jobId
+          };
+          
+          // Add applicant view ID if available
+          if (applicantViewId) {
+            extractionOptions.applicantViewId = applicantViewId;
+            updateStatus(`Using job ID: ${jobId} and applicant view ID: ${applicantViewId}. Starting extraction...`);
+          } else {
+            updateStatus(`Using job ID: ${jobId}. Starting extraction...`);
+          }
+          
+          try {
+            // Call the extraction API with the options
+            const result = await window.api.extractApplicants(extractionOptions);
+            console.log('Extraction result:', result);
+            
+            if (result && result.success) {
+              updateStatus(`Successfully extracted data for ${result.applicants?.length || 0} applicants`, false);
+              
+              // Display some information about the extracted applicants if available
+              if (result.applicants && result.applicants.length > 0) {
+                const applicantSummary = result.applicants.slice(0, 3).map(a => a.name || 'Unnamed').join(', ');
+                updateStatus(`Sample applicants: ${applicantSummary}${result.applicants.length > 3 ? '...' : ''}`, false);
+              }
+            } else {
+              updateStatus('Extraction completed but ' + (result?.error || 'no applicants were found'), 
+                result?.error ? true : false);
+            }
+          } catch (extractErr) {
+            console.error('Extraction error:', extractErr);
+            updateStatus('Error during extraction: ' + (extractErr.message || 'Unknown error'), true);
+            
+            // Special handling for Playwright-related errors
+            if (extractErr.message && extractErr.message.includes('Playwright')) {
+              updateStatus('Playwright browser issue. Please run: npx playwright install', true);
+            }
+            
+            // Special handling for authentication errors
+            if (extractErr.message && extractErr.message.includes('login') || extractErr.message.includes('auth')) {
+              updateStatus('LinkedIn authentication issue. Please make sure you are logged in to LinkedIn.', true);
+            }
+          }
+        } catch (err) {
+          console.error('General error:', err);
+          updateStatus('General error: ' + (err.message || 'Unknown error'), true);
+        }
+      });
+      
+      // Helper functions
+      function updateStatus(message, isError = false) {
+        statusMessages.textContent = message;
+        statusMessages.className = 'status ' + (isError ? 'error' : 'success');
+      }
+      
+      function extractJobId(url) {
+        // Extract job ID from various URL formats
+        let regex;
+        
+        // Format: /hiring/jobs/4206700740/detail/
+        if (url.includes('hiring/jobs')) {
+          regex = /\/hiring\/jobs\/(\d+)/;
+        } 
+        // Format: /hiring/jobs/4206700740/applicants/32362598783/detail/
+        else if (url.includes('hiring/jobs') && url.includes('applicants')) {
+          regex = /\/hiring\/jobs\/(\d+)\/applicants/;
+        }
+        // Format: /jobs/view/1234567
+        else if (url.includes('jobs/view')) {
+          regex = /\/jobs\/view\/(\d+)/;
+        }
+        // Try a generic number extraction as fallback
+        else {
+          regex = /\/jobs\/.*?(\d{7,})/;
+        }
+        
+        const match = url.match(regex);
+        return match ? match[1] : null;
+      }
+      
+      // Also extract applicant view ID if available
+      function extractApplicantViewId(url) {
+        const regex = /\/applicants\/(\d+)/;
+        const match = url.match(regex);
+        return match ? match[1] : null;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+JOHN SMITH
+Software Engineer
+
+CONTACT
+Email: john.smith@example.com
+Phone: (123) 456-7890
+LinkedIn: linkedin.com/in/johnsmith
+Location: San Francisco, CA
+
+SUMMARY
+Experienced software engineer with 8+ years of experience in full-stack development. 
+Proficient in JavaScript, React, Node.js, and SQL. Passionate about creating 
+scalable and user-friendly applications with clean, maintainable code.
+
+SKILLS
+Programming Languages: JavaScript, TypeScript, Python, Java, SQL, HTML, CSS
+Frameworks/Libraries: React, Vue.js, Express, Next.js, Jest, Redux
+Tools & Technologies: Git, Docker, AWS, CI/CD, MongoDB, PostgreSQL
+Methodologies: Agile, Scrum, TDD, Microservices, RESTful APIs
+
+EXPERIENCE
+Senior Software Engineer
+Tech Innovators Inc., San Francisco, CA
+January 2020 - Present
+- Led the development of a customer-facing dashboard using React, reducing load times by 40%
+- Redesigned authentication system using JWT, improving security and user experience
+- Mentored junior developers and conducted code reviews to maintain code quality
+- Implemented automated testing with Jest, increasing test coverage to 85%
+
+Software Engineer
+Digital Solutions Corp., Oakland, CA
+March 2017 - December 2019
+- Developed and maintained RESTful APIs using Node.js and Express
+- Created responsive web applications with React and Redux
+- Collaborated with design team to implement UI/UX improvements
+- Optimized database queries, improving application performance by 30%
+
+Junior Developer
+StartUp Technologies, San Jose, CA
+June 2015 - February 2017
+- Built and maintained features for e-commerce platform using JavaScript and PHP
+- Assisted in database design and implementation using MySQL
+- Participated in daily stand-ups and sprint planning
+
+EDUCATION
+Master of Science in Computer Science
+Stanford University, Stanford, CA
+2013 - 2015
+
+Bachelor of Science in Computer Engineering
+University of California, Berkeley, CA
+2009 - 2013
+
+CERTIFICATIONS
+- AWS Certified Developer - Associate (2021)
+- MongoDB Certified Developer (2020)
+- Certified Scrum Master (2019)
+
+LANGUAGES
+- English (Native)
+- Spanish (Conversational)
+- Mandarin (Basic)
+
+PROJECTS
+E-commerce Platform (2021)
+- Built a full-stack e-commerce application using MERN stack
+- Implemented secure payment processing with Stripe
+- Utilized Redux for state management and JWT for authentication
+
+Task Management System (2020)
+- Developed a collaborative task management tool using React and Firebase
+- Implemented real-time updates using WebSockets
+- Created a responsive design for mobile and desktop use

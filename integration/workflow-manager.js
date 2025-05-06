@@ -1,12 +1,34 @@
 /**
  * WorkflowManager - Coordinates workflows between all modules
  */
-class WorkflowManager {
+class WorkflowManager extends require('events').EventEmitter {
   constructor({ dataStorage, linkedInAutomation, evaluationEngine, messageGenerator }) {
+    super();
     this.dataStorage = dataStorage;
     this.linkedInAutomation = linkedInAutomation;
     this.evaluationEngine = evaluationEngine;
     this.messageGenerator = messageGenerator;
+    
+    // Extraction state
+    this.extractionState = {
+      isExtracting: false,
+      isPaused: false,
+      jobId: null,
+      totalApplicants: 0,
+      processedApplicants: 0,
+      startTime: null,
+      pauseTime: null,
+      currentBatch: 0,
+      totalBatches: 0,
+      errors: []
+    };
+    
+    // Batch processing configuration
+    this.batchConfig = {
+      batchSize: 10,
+      concurrency: 2,
+      pauseBetweenBatches: 2000
+    };
     
     // Set up event handlers between components
     this._setupEventHandlers();
@@ -23,8 +45,42 @@ class WorkflowManager {
         // Save candidate to database
         const result = await this.dataStorage.saveCandidate(profileData);
         console.log(`Candidate ${result.isNew ? 'created' : 'updated'}: ${profileData.name}`);
+        
+        // Update extraction progress and emit event
+        if (this.extractionState.isExtracting) {
+          this.extractionState.processedApplicants++;
+          this._emitExtractionProgress();
+        }
       } catch (error) {
         console.error('Error saving candidate from LinkedIn:', error);
+        this._recordExtractionError(error, 'profile_save_failed', profileData);
+      }
+    });
+    
+    // Forward search completed events
+    this.linkedInAutomation.on('searchCompleted', (applicants) => {
+      if (this.extractionState.isExtracting) {
+        this.extractionState.totalApplicants = applicants.length;
+        this.emit('extraction-started', {
+          jobId: this.extractionState.jobId,
+          totalApplicants: applicants.length,
+          estimatedTimeMinutes: this._estimateExtractionTime(applicants.length)
+        });
+      }
+    });
+    
+    // Error events from LinkedIn automation
+    this.linkedInAutomation.on('error', (error) => {
+      console.error('LinkedIn automation error:', error);
+      this._recordExtractionError(error, 'linkedin_automation_error');
+      
+      if (this.extractionState.isExtracting) {
+        this.emit('extraction-error', {
+          jobId: this.extractionState.jobId,
+          error: error.message,
+          code: 'LINKEDIN_ERROR',
+          canRetry: true
+        });
       }
     });
   }
@@ -313,6 +369,560 @@ async connectToLinkedIn(userId) {
     return { success: false, message: error.message };
   }
 }
+
+/**
+ * Analyze a CV file against job requirements
+ * @param {string} cvPath - Path to the CV file
+ * @param {Object} jobRequirements - Job requirements object
+ * @returns {Promise<Object>} - Analysis results
+ */
+async analyzeCV(cvPath, jobRequirements) {
+  try {
+    // Import CV analyzer only when needed (lazy loading)
+    const cvAnalyzer = require('../modules/evaluation-engine/cv-analyzer-complete');
+    
+    // Analyze the CV
+    const analysisResult = await cvAnalyzer.analyzeCV({
+      cvPath,
+      jobRequirements
+    });
+    
+    console.log(`CV analysis complete for ${cvPath}`);
+    return {
+      success: true,
+      analysis: analysisResult
+    };
+  } catch (error) {
+    console.error(`Failed to analyze CV at ${cvPath}:`, error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+  /**
+   * Start LinkedIn browser and ensure user is logged in
+   * @returns {Promise<Object>} Status of the browser startup
+   */
+  async startLinkedInBrowser() {
+    try {
+      if (!this.linkedInAutomation.browser) {
+        await this.linkedInAutomation.init();
+      }
+      
+      const isLoggedIn = await this.linkedInAutomation.ensureLoggedIn();
+      return { success: true, isLoggedIn };
+    } catch (error) {
+      console.error('LinkedIn browser start error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+  
+  /**
+   * Extract applicants from a LinkedIn job posting
+   * @param {string} jobId LinkedIn job ID
+   * @returns {Promise<Object>} Extraction result
+   */
+  async extractApplicantsFromJob(jobId) {
+    try {
+      // Check if we're already extracting
+      if (this.extractionState.isExtracting && !this.extractionState.isPaused) {
+        return {
+          success: false,
+          error: 'Extraction already in progress',
+          code: 'ALREADY_RUNNING'
+        };
+      }
+      
+      // If we're resuming a paused extraction for the same job
+      if (this.extractionState.isPaused && this.extractionState.jobId === jobId) {
+        return this.resumeExtraction();
+      }
+      
+      // Reset extraction state
+      this._resetExtractionState();
+      
+      // Update extraction state
+      this.extractionState.isExtracting = true;
+      this.extractionState.jobId = jobId;
+      this.extractionState.startTime = Date.now();
+      
+      // Make sure browser is initialized and logged in
+      const browserStatus = await this.startLinkedInBrowser();
+      if (!browserStatus.success || !browserStatus.isLoggedIn) {
+        this._recordExtractionError(
+          new Error('LinkedIn login required'), 
+          'login_required'
+        );
+        return {
+          success: false,
+          error: 'LinkedIn login required',
+          code: 'LOGIN_REQUIRED'
+        };
+      }
+      
+      // Start extraction in the background
+      this._startExtractionProcess(jobId);
+      
+      // Return initial status
+      return {
+        success: true,
+        message: 'Extraction started',
+        jobId: jobId,
+        status: 'extracting'
+      };
+    } catch (error) {
+      console.error('Extraction start error:', error);
+      this._resetExtractionState();
+      return {
+        success: false,
+        error: error.message,
+        code: 'EXTRACTION_START_FAILED'
+      };
+    }
+  }
+  
+  /**
+   * Pause the current extraction process
+   * @returns {Promise<Object>} Status of pause operation
+   */
+  async pauseExtraction() {
+    try {
+      if (!this.extractionState.isExtracting) {
+        return {
+          success: false,
+          error: 'No extraction in progress',
+          code: 'NO_EXTRACTION'
+        };
+      }
+      
+      if (this.extractionState.isPaused) {
+        return {
+          success: true,
+          message: 'Extraction already paused',
+          status: 'paused'
+        };
+      }
+      
+      // Update state
+      this.extractionState.isPaused = true;
+      this.extractionState.pauseTime = Date.now();
+      
+      // Emit pause event
+      this.emit('extraction-paused', {
+        jobId: this.extractionState.jobId,
+        processedApplicants: this.extractionState.processedApplicants,
+        totalApplicants: this.extractionState.totalApplicants,
+        progress: this._calculateProgress()
+      });
+      
+      return {
+        success: true,
+        message: 'Extraction paused',
+        status: 'paused',
+        progress: this._calculateProgress()
+      };
+    } catch (error) {
+      console.error('Pause extraction error:', error);
+      return {
+        success: false,
+        error: error.message,
+        code: 'PAUSE_FAILED'
+      };
+    }
+  }
+  
+  /**
+   * Resume a previously paused extraction
+   * @returns {Promise<Object>} Status of resume operation
+   */
+  async resumeExtraction() {
+    try {
+      if (!this.extractionState.isExtracting) {
+        return {
+          success: false,
+          error: 'No extraction to resume',
+          code: 'NO_EXTRACTION'
+        };
+      }
+      
+      if (!this.extractionState.isPaused) {
+        return {
+          success: true,
+          message: 'Extraction already running',
+          status: 'extracting'
+        };
+      }
+      
+      // Update state
+      this.extractionState.isPaused = false;
+      
+      // Resume the extraction process
+      this._resumeExtractionProcess();
+      
+      // Emit resume event
+      this.emit('extraction-resumed', {
+        jobId: this.extractionState.jobId,
+        processedApplicants: this.extractionState.processedApplicants,
+        totalApplicants: this.extractionState.totalApplicants,
+        progress: this._calculateProgress()
+      });
+      
+      return {
+        success: true,
+        message: 'Extraction resumed',
+        status: 'extracting',
+        progress: this._calculateProgress()
+      };
+    } catch (error) {
+      console.error('Resume extraction error:', error);
+      return {
+        success: false,
+        error: error.message,
+        code: 'RESUME_FAILED'
+      };
+    }
+  }
+  
+  /**
+   * Start the background extraction process
+   * @param {string} jobId LinkedIn job ID
+   * @private
+   */
+  async _startExtractionProcess(jobId) {
+    try {
+      // Start applicant extraction
+      const applicants = await this.linkedInAutomation.getApplicants(jobId);
+      
+      if (applicants.length === 0) {
+        this.emit('extraction-complete', {
+          jobId,
+          processedApplicants: 0,
+          totalApplicants: 0,
+          extractedProfiles: []
+        });
+        this._resetExtractionState();
+        return;
+      }
+      
+      // Plan batches for processing
+      const batches = this._createBatches(applicants, this.batchConfig.batchSize);
+      this.extractionState.totalBatches = batches.length;
+      
+      // Process batches unless paused
+      for (let i = 0; i < batches.length; i++) {
+        // Check if we should stop
+        if (!this.extractionState.isExtracting) {
+          console.log('Extraction stopped');
+          return;
+        }
+        
+        // Check if we should pause
+        if (this.extractionState.isPaused) {
+          console.log('Extraction paused at batch', i);
+          this.extractionState.currentBatch = i;
+          return;
+        }
+        
+        // Update current batch
+        this.extractionState.currentBatch = i;
+        
+        // Process batch
+        await this._processBatch(batches[i], i + 1);
+        
+        // Small pause between batches to avoid detection
+        await new Promise(resolve => setTimeout(resolve, this.batchConfig.pauseBetweenBatches));
+      }
+      
+      // Extraction completed
+      this.emit('extraction-complete', {
+        jobId,
+        processedApplicants: this.extractionState.processedApplicants,
+        totalApplicants: this.extractionState.totalApplicants,
+        errors: this.extractionState.errors.length > 0 ? this.extractionState.errors : null
+      });
+      
+      this._resetExtractionState();
+    } catch (error) {
+      console.error('Extraction process error:', error);
+      this._recordExtractionError(error, 'extraction_process_failed');
+      
+      this.emit('extraction-error', {
+        jobId,
+        error: error.message,
+        code: 'EXTRACTION_PROCESS_FAILED',
+        canRetry: true
+      });
+      
+      this._resetExtractionState();
+    }
+  }
+  
+  /**
+   * Resume the extraction process from where it was paused
+   * @private
+   */
+  async _resumeExtractionProcess() {
+    try {
+      // Check if we have a valid state to resume
+      if (!this.extractionState.isExtracting || 
+          !this.extractionState.jobId ||
+          this.extractionState.currentBatch === null) {
+        throw new Error('Invalid extraction state for resume');
+      }
+      
+      // Get applicants again (we might need to refresh)
+      const applicants = await this.linkedInAutomation.getApplicants(this.extractionState.jobId);
+      
+      // Plan batches again
+      const batches = this._createBatches(applicants, this.batchConfig.batchSize);
+      
+      // Continue from current batch
+      for (let i = this.extractionState.currentBatch; i < batches.length; i++) {
+        // Check if we should stop
+        if (!this.extractionState.isExtracting) {
+          console.log('Extraction stopped');
+          return;
+        }
+        
+        // Check if we should pause
+        if (this.extractionState.isPaused) {
+          console.log('Extraction paused at batch', i);
+          this.extractionState.currentBatch = i;
+          return;
+        }
+        
+        // Update current batch
+        this.extractionState.currentBatch = i;
+        
+        // Process batch
+        await this._processBatch(batches[i], i + 1);
+        
+        // Small pause between batches to avoid detection
+        await new Promise(resolve => setTimeout(resolve, this.batchConfig.pauseBetweenBatches));
+      }
+      
+      // Extraction completed
+      this.emit('extraction-complete', {
+        jobId: this.extractionState.jobId,
+        processedApplicants: this.extractionState.processedApplicants,
+        totalApplicants: this.extractionState.totalApplicants,
+        errors: this.extractionState.errors.length > 0 ? this.extractionState.errors : null
+      });
+      
+      this._resetExtractionState();
+    } catch (error) {
+      console.error('Resume extraction process error:', error);
+      this._recordExtractionError(error, 'resume_process_failed');
+      
+      this.emit('extraction-error', {
+        jobId: this.extractionState.jobId,
+        error: error.message,
+        code: 'RESUME_PROCESS_FAILED',
+        canRetry: true
+      });
+      
+      this._resetExtractionState();
+    }
+  }
+  
+  /**
+   * Process a batch of applicants
+   * @param {Array} batch Batch of applicants to process
+   * @param {number} batchNumber Current batch number
+   * @private
+   */
+  async _processBatch(batch, batchNumber) {
+    try {
+      // Update progress
+      this.emit('batch-started', {
+        jobId: this.extractionState.jobId,
+        batchNumber,
+        totalBatches: this.extractionState.totalBatches,
+        batchSize: batch.length
+      });
+      
+      // Process applicants concurrently but within concurrency limit
+      const concurrency = this.batchConfig.concurrency;
+      
+      // Process in chunks according to concurrency setting
+      for (let i = 0; i < batch.length; i += concurrency) {
+        const chunk = batch.slice(i, i + concurrency);
+        const promises = chunk.map(applicant => this._processApplicant(applicant));
+        
+        await Promise.all(promises);
+        
+        // Check if paused after each chunk
+        if (this.extractionState.isPaused) {
+          return;
+        }
+      }
+      
+      // Update progress
+      this.emit('batch-completed', {
+        jobId: this.extractionState.jobId,
+        batchNumber,
+        totalBatches: this.extractionState.totalBatches,
+        processedApplicants: this.extractionState.processedApplicants
+      });
+    } catch (error) {
+      console.error(`Error processing batch ${batchNumber}:`, error);
+      this._recordExtractionError(error, 'batch_processing_failed', { batchNumber });
+    }
+  }
+  
+  /**
+   * Process a single applicant
+   * @param {Object} applicant Applicant data
+   * @private
+   */
+  async _processApplicant(applicant) {
+    try {
+      // Skip if no profile URL
+      if (!applicant.profileUrl) {
+        console.warn('Skipping applicant with no profile URL:', applicant.name);
+        return;
+      }
+      
+      // Get detailed profile data
+      const profileData = await this.linkedInAutomation.getProfileData(applicant.profileUrl);
+      
+      // Try to download CV if available
+      try {
+        const cvDownload = await this.linkedInAutomation.downloadCV(applicant.profileUrl);
+        if (cvDownload.success) {
+          profileData.cvFilePath = cvDownload.filePath;
+        }
+      } catch (cvError) {
+        console.warn(`Failed to download CV for ${applicant.name}:`, cvError);
+        this._recordExtractionError(cvError, 'cv_download_failed', {
+          applicantName: applicant.name,
+          profileUrl: applicant.profileUrl
+        });
+      }
+      
+      // Save profile data to JSON
+      await this.linkedInAutomation.saveProfileToJson(profileData);
+      
+      // Note: saving to database is handled by the profileExtracted event listener
+    } catch (error) {
+      console.error(`Error processing applicant ${applicant.name}:`, error);
+      this._recordExtractionError(error, 'applicant_processing_failed', {
+        applicantName: applicant.name,
+        profileUrl: applicant.profileUrl
+      });
+    }
+  }
+  
+  /**
+   * Reset the extraction state
+   * @private
+   */
+  _resetExtractionState() {
+    this.extractionState = {
+      isExtracting: false,
+      isPaused: false,
+      jobId: null,
+      totalApplicants: 0,
+      processedApplicants: 0,
+      startTime: null,
+      pauseTime: null,
+      currentBatch: 0,
+      totalBatches: 0,
+      errors: []
+    };
+  }
+  
+  /**
+   * Calculate current progress percentage
+   * @returns {number} Progress percentage
+   * @private
+   */
+  _calculateProgress() {
+    if (this.extractionState.totalApplicants === 0) {
+      return 0;
+    }
+    
+    return Math.round(
+      (this.extractionState.processedApplicants / this.extractionState.totalApplicants) * 100
+    );
+  }
+  
+  /**
+   * Estimate remaining time for extraction
+   * @returns {number} Estimated time remaining in seconds
+   * @private
+   */
+  _estimateTimeRemaining() {
+    if (this.extractionState.processedApplicants === 0 || 
+        !this.extractionState.startTime ||
+        this.extractionState.totalApplicants === 0) {
+      return null;
+    }
+    
+    const elapsedMs = Date.now() - this.extractionState.startTime;
+    const msPerApplicant = elapsedMs / this.extractionState.processedApplicants;
+    const remainingApplicants = this.extractionState.totalApplicants - this.extractionState.processedApplicants;
+    
+    return Math.round((msPerApplicant * remainingApplicants) / 1000);
+  }
+  
+  /**
+   * Estimate total extraction time based on number of applicants
+   * @param {number} applicantCount Number of applicants
+   * @returns {number} Estimated time in minutes
+   * @private
+   */
+  _estimateExtractionTime(applicantCount) {
+    // Rough estimate: 30 seconds per applicant
+    const estimatedSeconds = applicantCount * 30;
+    return Math.ceil(estimatedSeconds / 60);
+  }
+  
+  /**
+   * Create batches from an array of items
+   * @param {Array} items Items to batch
+   * @param {number} batchSize Size of each batch
+   * @returns {Array} Array of batches
+   * @private
+   */
+  _createBatches(items, batchSize) {
+    const batches = [];
+    for (let i = 0; i < items.length; i += batchSize) {
+      batches.push(items.slice(i, i + batchSize));
+    }
+    return batches;
+  }
+  
+  /**
+   * Record an extraction error
+   * @param {Error} error Error object
+   * @param {string} code Error code
+   * @param {Object} context Additional context
+   * @private
+   */
+  _recordExtractionError(error, code, context = {}) {
+    this.extractionState.errors.push({
+      message: error.message,
+      code,
+      timestamp: new Date().toISOString(),
+      context
+    });
+  }
+  
+  /**
+   * Emit extraction progress event
+   * @private
+   */
+  _emitExtractionProgress() {
+    this.emit('extraction-progress', {
+      jobId: this.extractionState.jobId,
+      processedApplicants: this.extractionState.processedApplicants,
+      totalApplicants: this.extractionState.totalApplicants,
+      progress: this._calculateProgress(),
+      estimatedTimeRemaining: this._estimateTimeRemaining()
+    });
+  }
 }
 
 module.exports = WorkflowManager;

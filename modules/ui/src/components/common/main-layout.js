@@ -36,6 +36,15 @@ const MainLayout = () => {
       exact: true
     },
     { 
+      name: 'LinkedIn Extraction',
+      path: '/linkedin-extraction',
+      icon: ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15" />
+        </svg>
+      )
+    },
+    { 
       name: 'Candidates', 
       path: '/candidates', 
       icon: UserGroupIcon 
@@ -53,8 +62,32 @@ const MainLayout = () => {
   ];
 
   // Handle logout
-  const handleLogout = async () => {
-    await logout();
+  const handleLogout = async (e) => {
+    if (e) e.preventDefault();
+    console.log('Logout button clicked');
+    
+    try {
+      console.log('Attempting to logout...');
+      const result = await logout();
+      console.log('Logout result:', result);
+      
+      // Force navigation to login page
+      window.location.href = '#/login';
+      // Force a page reload to clear state
+      window.location.reload();
+    } catch (error) {
+      console.error('Error during logout:', error);
+      // Try fallback logout approach
+      if (window.api && window.api.clearCredentials) {
+        try {
+          await window.api.clearCredentials();
+          window.location.href = '#/login';
+          window.location.reload();
+        } catch (secondError) {
+          console.error('Fallback logout also failed:', secondError);
+        }
+      }
+    }
   };
   
   return (
@@ -116,7 +149,44 @@ const MainLayout = () => {
                     {currentUser?.name || 'User'}
                   </p>
                   <button
-                    onClick={handleLogout}
+                    id="logoutButton"
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Logout button clicked via onClick handler');
+                      
+                      // Use the robust API
+                      if (window.api && window.api.clearCredentials) {
+                        try {
+                          console.log('Calling clearCredentials API method...');
+                          window.api.clearCredentials()
+                            .then(result => {
+                              console.log('Direct logout result:', result);
+                              // Use a setTimeout to ensure the API call completes
+                              setTimeout(() => {
+                                console.log('Navigating to login page...');
+                                window.location.href = '#/login';
+                                window.location.reload();
+                              }, 100);
+                            })
+                            .catch(err => {
+                              console.error('Direct logout error:', err);
+                              // Still try to navigate even if API fails
+                              window.location.href = '#/login';
+                              window.location.reload();
+                            });
+                        } catch (error) {
+                          console.error('Exception calling clearCredentials:', error);
+                          window.location.href = '#/login';
+                          window.location.reload();
+                        }
+                      } else {
+                        console.warn('API not available, using fallback logout');
+                        // Fallback to context logout
+                        handleLogout(e);
+                      }
+                    }}
                     className="flex items-center text-xs font-medium text-gray-500 hover:text-linkedin-blue"
                   >
                     <ArrowRightStartOnRectangleIcon className="mr-1 h-4 w-4" />

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LinkedIn Recruiter Tool - Button Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .btn {
+      background: #0077b5;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .btn:hover {
+      background: #006097;
+    }
+    #results {
+      margin-top: 20px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 4px;
+      min-height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>LinkedIn Recruiter Tool - Button Test</h1>
+  <p>This page tests button functionality with the Electron IPC bridge</p>
+  
+  <div>
+    <button id="versionBtn" class="btn">Get App Version</button>
+    <button id="linkedinBtn" class="btn">Start LinkedIn Browser</button>
+    <button id="logoutBtn" class="btn">Logout</button>
+    <button id="directBtn" class="btn" onclick="testDirectClick()">Test Direct onClick</button>
+  </div>
+  
+  <div id="results">
+    <p>Results will appear here</p>
+  </div>
+  
+  <script>
+    // DOM Ready
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM ready in button test page');
+      
+      // Log API availability
+      const resultsDiv = document.getElementById('results');
+      
+      if (window.api) {
+        resultsDiv.innerHTML = `<p>API is available. Methods: ${Object.keys(window.api).join(', ')}</p>`;
+      } else {
+        resultsDiv.innerHTML = '<p style="color: red;">API is NOT available!</p>';
+        return;
+      }
+      
+      // Setup button handlers
+      document.getElementById('versionBtn').addEventListener('click', async () => {
+        try {
+          const version = await window.api.getAppVersion();
+          resultsDiv.innerHTML += `<p>App version: ${version}</p>`;
+        } catch (err) {
+          resultsDiv.innerHTML += `<p style="color: red;">Error getting version: ${err.message}</p>`;
+        }
+      });
+      
+      document.getElementById('linkedinBtn').addEventListener('click', async () => {
+        try {
+          resultsDiv.innerHTML += `<p>Starting LinkedIn browser...</p>`;
+          const result = await window.api.startLinkedInBrowser();
+          resultsDiv.innerHTML += `<p>Result: ${JSON.stringify(result)}</p>`;
+        } catch (err) {
+          resultsDiv.innerHTML += `<p style="color: red;">Error starting LinkedIn browser: ${err.message}</p>`;
+        }
+      });
+      
+      document.getElementById('logoutBtn').addEventListener('click', async () => {
+        try {
+          resultsDiv.innerHTML += `<p>Logging out...</p>`;
+          const result = await window.api.clearCredentials();
+          resultsDiv.innerHTML += `<p>Logout result: ${JSON.stringify(result)}</p>`;
+          
+          // Force navigation to simulated login page
+          resultsDiv.innerHTML += `<p>Redirecting to login page...</p>`;
+          
+          // In actual app, we'd use:
+          // window.location.href = '#/login';
+          // window.location.reload();
+        } catch (err) {
+          resultsDiv.innerHTML += `<p style="color: red;">Error logging out: ${err.message}</p>`;
+        }
+      });
+    });
+    
+    // Direct onClick test
+    function testDirectClick() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML += `<p>Direct onClick handler worked!</p>`;
+    }
+  </script>
+</body>
+</html>

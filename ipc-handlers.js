@@ -1,6 +1,8 @@
 // Setup IPC handlers for communication with renderer process
-const { ipcMain } = require('electron');
-const Store = require('electron-store'); // Add this import
+const { ipcMain, BrowserWindow } = require('electron');
+const Store = require('electron-store');
+const path = require('path');
+const fs = require('fs');
 
 // Initialize secure storage
 const store = new Store({
@@ -8,7 +10,45 @@ const store = new Store({
   name: 'secure-credentials'
 });
 
-function setupIpcHandlers(workflowManager) {
+/**
+ * Set up event forwarding from backend to frontend
+ * @param {Object} workflowManager WorkflowManager instance
+ * @param {BrowserWindow} mainWindow Main window instance
+ */
+function setupEventForwarding(workflowManager, mainWindow) {
+  // List of events to forward
+  const events = [
+    'extraction-started',
+    'extraction-progress',
+    'extraction-complete',
+    'extraction-error',
+    'extraction-paused',
+    'extraction-resumed',
+    'batch-started',
+    'batch-completed',
+    'cv-analysis-progress',
+    'cv-analysis-complete'
+  ];
+  
+  // Set up listeners for each event
+  events.forEach(eventName => {
+    workflowManager.on(eventName, (data) => {
+      // Log event for debugging
+      console.log(`Event forwarded to UI: ${eventName}`, data);
+      
+      // Only forward to renderer if window exists and is not destroyed
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send(eventName, data);
+      }
+    });
+  });
+}
+
+function setupIpcHandlers(workflowManager, mainWindow) {
+  // Set up event forwarding
+  if (mainWindow) {
+    setupEventForwarding(workflowManager, mainWindow);
+  }
   // Authentication
   ipcMain.handle('auth:login', async (event, credentials) => {
     try {
@@ -82,6 +122,90 @@ function setupIpcHandlers(workflowManager) {
     }
   });
 
+  // CV Analysis handlers
+  ipcMain.handle('cv:analyze', async (event, data) => {
+    try {
+      const { cvPath, jobRequirements } = data;
+      
+      // Verify the file exists
+      if (!fs.existsSync(cvPath)) {
+        return { 
+          success: false, 
+          error: `CV file not found at path: ${cvPath}` 
+        };
+      }
+      
+      // Analyze the CV
+      return await workflowManager.analyzeCV(cvPath, jobRequirements);
+    } catch (error) {
+      console.error('CV analysis error:', error);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  // Get list of downloaded CVs
+  ipcMain.handle('cv:list', async () => {
+    try {
+      const downloadsPath = path.join(process.cwd(), 'downloads');
+      
+      if (!fs.existsSync(downloadsPath)) {
+        fs.mkdirSync(downloadsPath, { recursive: true });
+        return { success: true, cvFiles: [] };
+      }
+      
+      const files = fs.readdirSync(downloadsPath)
+        .filter(file => file.endsWith('.pdf') || file.endsWith('.docx'))
+        .map(file => ({
+          filename: file,
+          path: path.join(downloadsPath, file),
+          size: fs.statSync(path.join(downloadsPath, file)).size,
+          lastModified: fs.statSync(path.join(downloadsPath, file)).mtime
+        }));
+      
+      return { success: true, cvFiles: files };
+    } catch (error) {
+      console.error('Error listing CV files:', error);
+      return { success: false, error: error.message };
+    }
+  });
+
+  // LinkedIn extraction handlers
+  ipcMain.handle('linkedin:startBrowser', async () => {
+    try {
+      return await workflowManager.startLinkedInBrowser();
+    } catch (error) {
+      console.error('LinkedIn browser start error:', error);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('linkedin:extractApplicants', async (event, jobId) => {
+    try {
+      return await workflowManager.extractApplicantsFromJob(jobId);
+    } catch (error) {
+      console.error('LinkedIn applicant extraction error:', error);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('linkedin:pauseExtraction', async () => {
+    try {
+      return await workflowManager.pauseExtraction();
+    } catch (error) {
+      console.error('LinkedIn extraction pause error:', error);
+      return { success: false, error: error.message };
+    }
+  });
+  
+  ipcMain.handle('linkedin:resumeExtraction', async () => {
+    try {
+      return await workflowManager.resumeExtraction();
+    } catch (error) {
+      console.error('LinkedIn extraction resume error:', error);
+      return { success: false, error: error.message };
+    }
+  });
+  
   // Rest of your handlers...
 }
 
